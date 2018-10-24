@@ -1,14 +1,79 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<!-- Content here -->
+
+</body>
+</html>
+
+
+
+
 <html>
 <head>
-  <title> John Edwards </title>
+  <title> EdwardsLab </title>
     <link rel="icon" href="./favicon.ico?v=3" />
-  <meta name = "description" content = " This is the homepage of John Edwards" />
-  <meta name = "Keywords" content = "Computer, Science, John, Edwards, edwardsj" />
-  <link rel="stylesheet" href="style.css">
+  <meta name = "description" content = "EdwardsLab" />
+  <meta name = "Keywords" content = "Computer, Science, John, Edwards" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- remove the pro to get colors -->
+  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3pro.css">
+  <link rel="stylesheet" href="./style.css">
 </head>
 
 <body>
-  <div class="row">
-    <h1 style="text-align: center;">EdwardsLab</h1>
-    <h4 class="col-xs-12" style="text-align: center;"><img class="" style="display: block; margin-left: auto; margin-right: auto;" src="./images/bunnies.png" alt="GVD of Stanford bunnies" width="292" height="289" />Visualization, geometry, and simulation laboratory<br /><a href="./index.html"><br />Come on in!</a></h4>
+  <!-------------------- Sidebar -------------------->
+
+  <!--
+      The sidebar in this example will always be displayed on screens wider
+      than 992px, and hidden on tablets or mobile phones (screens less than
+      993px wide). On tablets and mobile phones the sidebar is replaced with
+      a menu icon to open the sidebar. The sidebar will overlay of the page
+      content.
+    -->
+  <!--div class="w3-sidebar w3-bar-block w3-collapse w3-card w3-animate-left" style="width:200px; display:none; z-index:5" id="mySidebar"-->
+  <div class="w3-sidebar w3-bar-block w3-collapse w3-card" style="width:200px; display:none; z-index:5" id="mySidebar">
+    <button class="w3-bar-item w3-button w3-large w3-hide-large" onclick="w3_close()">Close &times;</button>
+    <br>
+    <a href="./index.html" class="w3-bar-item w3-button">Welcome</a>
+    <a href="./index.html" class="w3-bar-item w3-button">Research</a>
+    <a href="./index.html" class="w3-bar-item w3-button">Publications</a>
+    <a href="./index.html" class="w3-bar-item w3-button">People</a>
+    <a href="./index.html" class="w3-bar-item w3-button">Contact</a>
   </div>
+
+  <!-------------------- Page content -------------------->
+
+  <div class="w3-main" style="margin-left:200px">
+    <div class="w3-teal">
+      <button class="w3-button w3-teal w3-xlarge w3-hide-large"
+              onclick="w3_open()">&#9776;</button>
+
+      <div class="w3-content">
+      <h1 class="w3-comicfont banner-text" style="text-align:center">EdwardsLab</h1>
+      <img src="./images/bunnies.png" alt="GVD of Stanford bunnies"
+           class="w3-image center"
+           style="display: block; margin-left: auto; margin-right: auto;"/>
+      <p class="w3-comicfont subbanner-text" style="text-align:center">Visualization, geometry, and simulation laboratory</p>
+      </div>
+    </div>
+    </div>
+  </div>
+
+
+
+  <!-------------------- Scripts -------------------->
+  <script>
+    function w3_open() {
+    document.getElementById("mySidebar").style.display = "block";
+    document.getElementById("myOverlay").style.display = "block";
+    }
+    function w3_close() {
+    document.getElementById("mySidebar").style.display = "none";
+    document.getElementById("myOverlay").style.display = "none";
+    }
+  </script>
+
+</body>
+</html>
