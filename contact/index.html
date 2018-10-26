@@ -10,9 +10,84 @@
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3pro.css">
     <link rel="stylesheet" href="../style.css">
     <link rel="icon" href="../assets/favicon.ico"/>
+
+    <!-------------------- Shaders -------------------->
+
+    <!-- Circle shaders -->
+    <script id="shader-fs" type="x-shader/x-fragment">
+      precision mediump float;
+      
+      varying vec4 vColor;
+      
+      varying vec3 v0;
+      varying vec3 v;
+      
+      void main(void) {
+      //gl_FragColor = vColor;
+      vec3 lightPos = vec3(5, 5, 0);
+      
+      vec3 N = normalize(vec3(v0.xy, sqrt(1.0-v0.x*v0.x-v0.y*v0.y)));
+      
+      vec3 L = normalize(lightPos - v);   
+      //vec4 Idiff = gl_FrontLightProduct[0].diffuse * max(dot(N,L), 0.0);  
+      vec4 Idiff = vec4(vec3(1.0, 0.8, 0.1) * max(dot(N,L), 0.0), 1.0);
+      //Idiff = clamp(Idiff, 0.0, 1.0); 
+      //Idiff = vec4(vec3(1.0, 0.0, 0.0) * 0.1, 1.0);
+      gl_FragColor = Idiff;
+      }
+    </script>
+    
+    <script id="shader-vs" type="x-shader/x-vertex">
+      attribute vec3 aVertexPosition;
+      attribute vec4 aVertexColor;
+      
+      uniform mat4 uMVMatrix;
+      uniform mat4 uPMatrix;
+      
+      varying vec4 vColor;
+      
+      varying vec3 v0;
+      varying vec3 v;
+      
+      void main(void) {
+      v0 = aVertexPosition;
+      v = vec3(uMVMatrix * vec4(aVertexPosition, 1.0));
+      
+      gl_Position = uPMatrix * uMVMatrix * vec4(aVertexPosition, 1.0);
+      vColor = aVertexColor;      
+      }
+    </script>
+    
+    <!-- Line shaders -->
+    <script id="lshader-fs" type="x-shader/x-fragment">
+      precision mediump float;
+      
+      varying vec4 vColor;
+      
+      void main(void) {
+      gl_FragColor = vColor;
+      }
+    </script>
+    
+    <script id="lshader-vs" type="x-shader/x-vertex">
+      attribute vec3 aVertexPosition;
+      attribute vec4 aVertexColor;
+      
+      uniform mat4 uMVMatrix;
+      uniform mat4 uPMatrix;
+      
+      varying vec4 vColor;
+      
+      void main(void) {
+      gl_Position = uPMatrix * uMVMatrix * vec4(aVertexPosition, 1.0);
+      vColor = aVertexColor;      
+      }
+    </script>
+    <!-------------------- End shaders -------------------->
+    
   </head>
 
-  <body>
+  <body onload="webGLStart();">
     <!-------------------- Sidebar -------------------->
 
     <!--
@@ -48,17 +123,29 @@
 
           <div id="contact-div" style="margin: 10px 10px 10px 10px">
 
-            Drop us a line! We'd love to hear from you.
-            <br/><br/>
-            If you would like to join EdwardsLab, the first step is to contact Dr. Edwards at the email/phone below. Then you should (A) take his class and do awesome or (B) do a cool project with him and...do awesome. We're always looking for bright, motivated, curious, hard-working, and occasionally quirky people.
-            <br/><br/>
-            email: <a href="mailto:john.edwards@usu.edu">john.edwards@usu.edu</a>
-            <br/>
-            phone: 435.797.0246
-            <br/>
-            office: MAIN 401D
+            <div class="w3-cell-row">
 
-          </div>
+              <div class="w3-threequarter w3-container w3-cell w3-cell-top">
+                Drop us a line! We'd love to hear from you.
+                <br/><br/>
+                If you would like to join EdwardsLab, the first step is to contact Dr. Edwards at the email/phone below. Then you should (A) take his class and do awesome or (B) do a cool project with him and...do awesome. We're always looking for bright, motivated, curious, hard-working, and occasionally quirky people.
+                <br/><br/>
+                email: <a href="mailto:john.edwards@usu.edu">john.edwards@usu.edu</a>
+                <br/>
+                phone: 435.797.0246
+                <br/>
+                office: MAIN 401D
+              </div>
+
+            <div class="w3-quarter w3-container w3-cell w3-cell-middle" style="width:200px">
+              <script type="text/javascript" src="webgl/glMatrix-0.9.5.min.js"></script>
+              <script type="text/javascript" src="webgl/webgl-utils.js"></script>
+              <script type="text/javascript" src="webgl/pendulum.js"></script>
+              <canvas id="pendulum-canvas" style="border: none;" width="200" height="200"></canvas>
+            </div>
+
+          </div> <!-- row -->
+
           <!-------------------- End your page content -------------------->
 
           <!-------------------- Footer -------------------->
