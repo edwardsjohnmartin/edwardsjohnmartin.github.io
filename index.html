@@ -1,16 +1,5 @@
 <!DOCTYPE html>
 <html>
-  <body>
-
-    <!-- Content here -->
-
-  </body>
-</html>
-
-
-
-
-<html>
   <head>
     <title> EdwardsLab </title>
     <link rel="icon" href="./favicon.ico?v=3" />
@@ -20,6 +9,7 @@
     <!-- remove the pro to get colors -->
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3pro.css">
     <link rel="stylesheet" href="./style.css">
+    <link rel="icon" href="./assets/favicon.ico"/>
   </head>
 
   <body>
@@ -33,7 +23,7 @@
         content.
       -->
     <div class="w3-sidebar w3-bar-block w3-collapse w3-card w3-animate-left" style="width:200px; display:none; z-index:5" id="mySidebar">
-    <!--div class="w3-sidebar w3-bar-block w3-collapse w3-card" style="width:200px; display:none; z-index:5" id="mySidebar"-->
+      <!--div class="w3-sidebar w3-bar-block w3-collapse w3-card" style="width:200px; display:none; z-index:5" id="mySidebar"-->
       <button class="w3-bar-item w3-button w3-large w3-hide-large" onclick="w3_close()">Close &times;</button>
       <div class="w3-bar-item sidebar-banner-text">EdwardsLab</div>
       <a href="./index.html" class="w3-bar-item w3-button">Welcome</a>
@@ -60,24 +50,23 @@
           <p class="w3-comicfont subbanner-text" style="text-align:center">Visualization, geometry, and simulation laboratory</p>
           <!-------------------- End your page content -------------------->
 
+          <!-------------------- Footer -------------------->
+          <br>
+          <br>
+          <hr/>
+          <div class="w3-image center" style="text-align:center">
+          <img src="./assets/usu-cs-logo2.png" style="width:300px"/>
+          </div>
+          <br>
+
         </div>
       </div>
     </div>
-</div>
 
 
 
-<!-------------------- Scripts -------------------->
-<script>
-  function w3_open() {
-  document.getElementById("mySidebar").style.display = "block";
-  document.getElementById("myOverlay").style.display = "block";
-  }
-  function w3_close() {
-  document.getElementById("mySidebar").style.display = "none";
-  document.getElementById("myOverlay").style.display = "none";
-  }
-</script>
+    <!-------------------- Scripts -------------------->
+    <script src="./sidebar.js"></script>
 
-</body>
+  </body>
 </html>

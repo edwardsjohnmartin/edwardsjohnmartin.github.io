@@ -3,41 +3,39 @@ let text = "";
 function addPerson(person) {
   text += `<div class="w3-cell-row">`;
 
-  // text += `<div class="w3-quarter w3-container w3-cell people-pic-col ">`;
-  // text += `<div class="w3-quarter w3-container w3-cell ">`;
+  // left column - picture and CV
   text += `<div class="w3-quarter w3-container w3-cell w3-cell-top" style="width:200px">`;
   text += `<img src="images/${person.image}" width=${person.size} class="people-pic"></img>`;
-  // text += `<img src="images/${person.image}" </img>`;
   if (person.cv) {
     text += `<br><a href=${person.cv} target="_blank">CV</a>`;
   }
   text += `<br><br></div>`;
 
+  // right column - bio
   text += `<div class="w3-threequarter w3-container w3-cell">`;
-  // text += `<div class="w3-container w3-cell">`;
   text += `<h3 style="margin-top: 0px;">${person.name}</h3>`;
-  text += `${person.text}`;
+  text += `${person.bio}`;
   text += `<br><br></div>`;
 
   text += `</div>`; // row
 }
 
-let john = { image:'edwards.jpg', size:178, name:'John Edwards', text:"John Edwards is an Assistant Professor at Utah State University. After receiving his Bachelor's Degree in Computer Science from USU he worked in the industry as a Software and Research Engineer doing high performance graphics applications. While working he earned a Master's of Computer Science from Brigham Young University. He later earned a PhD from the University of Texas where he worked on nanoscale geometric modeling of hippocampal brain neurons. He was advised by Chandrajit Bajaj. He followed his PhD with a two-year postdoc at the Scientific Computing and Imaging Institute at the University of Utah mentored by Valerio Pascucci and Christopher Johnson. He started his independent research career at Idaho State University and, after three years, joined the Computer Science faculty at Utah State University.<br /><br />Dr. Edwards has interests in geometric modeling, scientific visualization, and simulation. He has published in venues as diverse as Computers and Graphics, Neuroinformatics, and Precision Agriculture.<br /><br />Dr. Edwards has a beautiful and extremely talented wife and six intelligent and well-adjusted children. He enjoys backpacking, running, woodworking, singing barbershop, and excessively many other hobbies.", cv:"https://edwardsjohnmartin.github.io/cv/cv.pdf" };
+let john = { image:'edwards.jpg', size:178, name:'John Edwards', bio:"John Edwards is an Assistant Professor at Utah State University. After receiving his Bachelor's Degree in Computer Science from USU he worked in the industry as a Software and Research Engineer doing high performance graphics applications. While working he earned a Master's of Computer Science from Brigham Young University. He later earned a PhD from the University of Texas where he worked on nanoscale geometric modeling of hippocampal brain neurons. He was advised by Chandrajit Bajaj. He followed his PhD with a two-year postdoc at the Scientific Computing and Imaging Institute at the University of Utah mentored by Valerio Pascucci and Christopher Johnson. He started his independent research career at Idaho State University and, after three years, joined the Computer Science faculty at Utah State University.<br /><br />Dr. Edwards has interests in geometric modeling, scientific visualization, and simulation. He has published in venues as diverse as Computers and Graphics, Neuroinformatics, and Precision Agriculture.<br /><br />Dr. Edwards has a beautiful and extremely talented wife and six intelligent and well-adjusted children. He enjoys backpacking, running, woodworking, singing barbershop, and excessively many other hobbies.", cv:"https://edwardsjohnmartin.github.io/cv/cv.pdf" };
 
 let grads = [
-  // { image:'placeholder.jpg', size:165, name:'Joseph Ditton', text:"Doing great work" },
-  { image:'marsden.jpg', size:165, name:'Daniel Marsden', text:"Daniel has been developing software professionally since the beginning of 2016. He currently works at the Space Dynamics Laboratory in Logan, Utah. He earned his undergraduate degree in computer science from Brigham Young University - Idaho and is now pursuing a Master's degree at Utah State University. Daniel is fascinated by geometric shapes and objects. While studying for his undergraduate degree he developed his own Ray Tracing Engine. While not at home spending time with his toddler son and wife you can often find him writing equations and graphs on a whiteboard. He is deathly afraid of spiders, xenomorphs, and developing software on a Windows machine. Hobbies include hiking, spike ball, volleyball, camping, and cycling." },
-  { image:'placeholder.jpg', size:165, name:'[Your name here]', text:"Creative, intelligent, curious, and hard-working, [your name here] recently joined EdwardsLab and is progressing swimmingly towards a truly ground-breaking PhD thesis. [See the contact page if you would like your name here.]" },
+  // { image:'placeholder.jpg', size:165, name:'Joseph Ditton', bio:"Doing great work" },
+  { image:'marsden.jpg', size:165, name:'Daniel Marsden', bio:"Daniel has been developing software professionally since the beginning of 2016. He currently works at the Space Dynamics Laboratory in Logan, Utah. He earned his undergraduate degree in computer science from Brigham Young University - Idaho and is now pursuing a Master's degree at Utah State University. Daniel is fascinated by geometric shapes and objects. While studying for his undergraduate degree he developed his own Ray Tracing Engine. While not at home spending time with his toddler son and wife you can often find him writing equations and graphs on a whiteboard. He is deathly afraid of spiders, xenomorphs, and developing software on a Windows machine. Hobbies include hiking, spike ball, volleyball, camping, and cycling." },
+  { image:'placeholder.jpg', size:165, name:'[Your name here]', bio:"Creative, intelligent, curious, and hard-working, [your name here] recently joined EdwardsLab and is progressing swimmingly towards a truly ground-breaking PhD thesis. [See the contact page if you would like your name here.]" },
 ];
 
 let undergrads = [
-  { image:'johnson-bo.jpg', size:140, name:'Bo Johnson', text:"Bo is a Physics major with a Computer Science minor at Utah State University where he works on understanding the topographical and topological structure of dynamic magnet interactions. He is co-advised by Dr. John Edwards and Dr. Boyd Edwards (yep, they're brothers). Bo finds immense satisfaction out of learning something new. That can be a new physics principle, a fun trick in Linux, or traditions of people from other cultures. He also would prefer to spend time with his wife and new baby daughter, but knows he should probably do well in school also.<br><br><br>" },
-  { image:'valentin.jpg', size:140, name:'Joseph Valentin', text:"Joe has worked with Dr. Edwards his Sophomore, Junior and Senior years at Idaho State University where he implemented a novel linear regression algorithm and was the lead developer on the Phanon project. His work on Phanon resulted in a paper at the 2018 IEEE Frontiers in Education conference.<br><br><br>" }
+  { image:'johnson-bo.jpg', size:140, name:'Bo Johnson', bio:"Bo is a Physics major with a Computer Science minor at Utah State University where he works on understanding the topographical and topological structure of dynamic magnet interactions. He is co-advised by Dr. John Edwards and Dr. Boyd Edwards (yep, they're brothers). Bo finds immense satisfaction out of learning something new. That can be a new physics principle, a fun trick in Linux, or traditions of people from other cultures. He also would prefer to spend time with his wife and new baby daughter, but knows he should probably do well in school also.<br><br><br>" },
+  { image:'valentin.jpg', size:140, name:'Joseph Valentin', bio:"Joe has worked with Dr. Edwards his Sophomore, Junior and Senior years at Idaho State University where he implemented a novel linear regression algorithm and was the lead developer on the Phanon project. His work on Phanon resulted in a paper at the 2018 IEEE Frontiers in Education conference.<br><br><br>" }
 ];
 
 
 let alumni = [
-  { image:'morrical.jpg', size:140, name:'Nathan Morrical', text:"Nathan worked with Dr. Edwards during his Junior and Senior years at Idaho State University. He developed a parallel algorithm for generating the Generalized Voronoi Diagram and implemented it in OpenCL. His worked resulted in a presentation at the Shape Modeling International conference in 2017 and a publication in Computers and Graphics. After graduating from ISU Nathan began work on a PhD at the University of Utah." }
+  { image:'morrical.jpg', size:140, name:'Nathan Morrical', bio:"Nathan worked with Dr. Edwards during his Junior and Senior years at Idaho State University. He developed a parallel algorithm for generating the Generalized Voronoi Diagram and implemented it in OpenCL. His worked resulted in a presentation at the Shape Modeling International conference in 2017 and a publication in Computers and Graphics. After graduating from ISU Nathan began work on a PhD at the University of Utah." }
 ];
 
 addPerson(john);
