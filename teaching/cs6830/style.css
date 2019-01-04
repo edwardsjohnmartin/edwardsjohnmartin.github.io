@@ -1,0 +1,45 @@
+body {
+    color:#003366;
+}
+
+.banner-text {
+  font-size: 4em;
+  font-family: "Comic Sans MS", cursive, sans-serif;
+  text-shadow: 1px 1px #bbbbbb;
+}
+
+.sidebar-banner-text {
+  font-size: 1.5em;
+  font-family: "Comic Sans MS", cursive, sans-serif;
+  text-shadow: 1px 1px #bbbbbb;
+}
+
+.subbanner-text {
+  font-size: 2em;
+  font-family: "Comic Sans MS", cursive, sans-serif;
+}
+
+.page-heading {
+  font-family: "Comic Sans MS", cursive, sans-serif;
+  font-size: 3em;
+  text-shadow: 1px 1px #bbbbbb;
+}
+
+.w3-comicfont {
+  font-family: "Comic Sans MS", cursive, sans-serif;
+}
+
+.people-pic {
+}
+
+.people-pic-col {
+    width: 200px;
+}
+
+.people-text-col {
+}
+
+.hof-title {
+    margin-top: 30px;
+    margin-bottom: 0px;
+}

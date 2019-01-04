@@ -1,0 +1,79 @@
+<html><head>
+  <title>CS 5830/6830: Data Science Incubator</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+  <link href="./style.css" rel="stylesheet" type="text/css">
+
+  <style type="text/css">
+    z {color:gray;font-style:italic}
+
+    table {
+      border-collapse: collapse;
+    }
+    table, td {
+        padding: 3px;
+    }
+    table, th, td {
+        border: 1px solid black;
+    }
+    table.schedule {
+      counter-reset: rowNumber;
+    }
+    table.schedule tr:not(:first-child) {
+        counter-increment: rowNumber;
+    }
+    table.schedule tr td:first-child::before {
+        content: counter(rowNumber);
+        min-width: 1em;
+        margin-right: 0.5em;
+    }
+    table.grading, table.grading td {
+        border: none;
+    }
+    table.noborder, table.noborder td {
+        border: none;
+    }
+  </style>
+
+  </head>
+
+<h2>CS 5830/6830: Data Science Incubator</h2>
+
+
+<!-- HEADER INFO -->
+<!-- div class="header-box" -->
+
+<!--p>
+<b>Lecture:</b> MWF 12:30-1:20pm, Engineering 104<br/>
+<b>Prerequisites:</b> CS 3308, 2275<br/>
+<b>Optional text:</b>Data Science From Scratch by Joel Grus<br/>
+<b>Notes:</b> <a href="notes">Notes directory</a><br/>
+<b>Project instructions:</b> <a href="./project-instructions.html">Instructions</a><br/>
+<p>
+<b>Professor:</b> John Edwards<br/>
+<b>Email:</b> john.edwards@usu.edu<br/>
+<b>Office:</b>MAIN 401D<br/>
+<b>Office Hours:</b> M 11-12:00am, Th noon-1:00 and by appointment<br/>
+</p-->
+
+<h3>Schedule</h3>
+
+<!--table id="schedule" border="1" cellpadding="3" class="schedule"-->
+<!--table id="schedule" class="schedule"-->
+<table id="schedule">
+  <tbody>
+    <tr>
+      <th>&nbsp;</th>
+      <th>Date</th>
+<!--      <th>Reading</th> -->
+      <!--th>Text</th-->
+      <th>Topic</th>
+      <!--th>Video</th-->
+      <th>Proj Due</th>
+      <!--th>HW Due</th-->
+    </tr>
+    <script type="text/javascript" src="./schedule.js?1"></script>
+</tbody></table>
+<br>
+<!--The final is <b>Monday April 30</b> at <b>10:00am</b> in our normal classroom. The final is comprehensive.-->
+
+</body></html>
