@@ -32,7 +32,9 @@ let grads = [
 ];
 
 let undergrads = [
-  { image:'johnson-bo.jpg', size:140, name:'Bo Johnson', bio:"Bo is a Physics major with a Computer Science minor at Utah State University where he works on understanding the topographical and topological structure of dynamic magnet interactions. He is co-advised by Dr. John Edwards and Dr. Boyd Edwards (yep, they're brothers). Bo finds immense satisfaction out of learning something new. That can be a new physics principle, a fun trick in Linux, or traditions of people from other cultures. He also would prefer to spend time with his wife and new baby daughter, but knows he should probably do well in school also.<br><br><br>" },
+  { image:'johnson-bo.jpg', size:140, name:'Bo Johnson', bio:"Bo is a Physics major with a Computer Science minor at Utah State University where he works on understanding the topographical and topological structure of dynamic magnet interactions. He is co-advised by Dr. John Edwards and Dr. Boyd Edwards (yep, they're brothers). Bo finds immense satisfaction out of learning something new. That can be a new physics principle, a fun trick in Linux, or traditions of people from other cultures. He also would prefer to spend time with his wife and new baby daughter, but knows he should probably do well in school also." },
+
+  { image:'willard-jaxon.jpg', size:140, name:'Jaxon Willard', bio:"Jaxon has been working on his bachelor's in computer science since January 2018. He enjoys problem-solving and studying algorithms. In his spare time, he builds games like a version of Snake that uses artificial intelligence to play by itself. He loves exploring technology. At EdwardsLab, he works on high dimensional data visualization, providing data structures for data analytics. His hobbies include skiing, guitar, camping, hunting, and hiking."}
 ];
 
 
