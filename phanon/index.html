@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title> EdwardsLab </title>
+    <link rel="icon" href="../favicon.ico?v=3" />
+    <meta name = "description" content = "EdwardsLab" />
+    <meta name = "Keywords" content = "Computer, Science, John, Edwards" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- remove the pro to get colors -->
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3pro.css">
+    <link rel="stylesheet" href="../style.css">
+    <link rel="icon" href="../assets/favicon.ico"/>
+  </head>
+
+  <body>
+    <!-------------------- Sidebar -------------------->
+
+    <!--
+        The sidebar in this example will always be displayed on screens wider
+        than 992px, and hidden on tablets or mobile phones (screens less than
+        993px wide). On tablets and mobile phones the sidebar is replaced with
+        a menu icon to open the sidebar. The sidebar will overlay of the page
+        content.
+      -->
+    <div class="w3-sidebar w3-bar-block w3-collapse w3-card w3-animate-left" style="width:200px; display:none; z-index:5" id="mySidebar">
+      <!--div class="w3-sidebar w3-bar-block w3-collapse w3-card" style="width:200px; display:none; z-index:5" id="mySidebar"-->
+      <button class="w3-bar-item w3-button w3-large w3-hide-large" onclick="w3_close()">Close &times;</button>
+      <div class="w3-bar-item sidebar-banner-text">EdwardsLab</div>
+      <a href="../index.html" class="w3-bar-item w3-button">Welcome</a>
+      <a href="../projects/index.html" class="w3-bar-item w3-button">Projects</a>
+      <a href="../publications/index.html" class="w3-bar-item w3-button">Publications</a>
+      <a href="../people/index.html" class="w3-bar-item w3-button">People</a>
+      <a href="../contact/index.html" class="w3-bar-item w3-button">Contact</a>
+    </div>
+
+    <!-------------------- Generic page content -------------------->
+
+    <div class="w3-main" style="margin-left:200px">
+      <div class="w3-teal">
+        <button class="w3-button w3-teal w3-xlarge w3-hide-large"
+                onclick="w3_open()">&#9776;</button>
+
+        <div class="w3-content">
+
+          <!-------------------- Your page content -------------------->
+          <h1 class="w3-comicfont banner-text" style="text-align:center">Phanon</h1>
+          <h3>Instructions for trying out Phanon as a student</h3>
+          Note: normally students may not proceed to the next exercise or lesson until the current exercise is complete. This behavior is disabled in the demo so that you may freely try exercises in different lessons.
+          <ol>
+            <li>Go to <a href="http://phanon.usu.edu" target="_phanon">phanon.usu.edu</a></li>
+            <li>Create an account (you don't have to use your real email address)</li>
+            <li>Click the + button to add a course</li>
+            <li>Course code: demo</li>
+            <li>Click the "Join" button</li>
+            <li>Click the "Demo Course" link</li>
+            <li>Click "0 - print" - This is the first exercise set of the course
+Follow the instructions. You'll modify the code in the white window. The run button is just above the white code window.</li>
+          </ol>
+
+          <h3>Instructions for trying out Phanon as an instructor</h3>
+          <ol>
+            <li>Download the <a href="./demo-module.pmcart" download>sample module</a></li>
+            <li>Go to <a href="http://phanon.usu.edu" target="_phanon">phanon.usu.edu</a></li>
+            <li>Create an account (you don't have to use your real email address)</li>
+            <li>Click the + button to add a course</li>
+            <li>Click the "Create new course" button</li>
+            <li>Type in "My course" for the name</li>
+            <li>Leave the dates empty</li>
+            <li>Enter a random value for the code (note: a current bug in Phanon is that uniqueness of course codes is not enforced. Please enter something you're pretty sure won't conflict with someone else's code.)</li>
+            <li>Click "Save"</li>
+            <li>Click the "My course" link</li>
+            <li>Click the "+" button at the top-right of the screen</li>
+            <li>Click the "Import module" button</li>
+            <li>Navigate to the file "demo-module.pmcart" that you downloaded</li>
+            <li>Click the link to see which students have completed the lesson</li>
+            <li>Click the pencil link for any of the lessons to edit a lesson</li>
+            <li>When editing a lesson you may click on the eye button at the top left for a student view</li>
+            <li>Students may add your course to their Phanon account using the instructions at the top of this page</li>
+          </ol>
+          <!-------------------- End your page content -------------------->
+
+          <!-------------------- Footer -------------------->
+          <br>
+          <br>
+          <hr/>
+          <div class="w3-image center" style="text-align:center">
+          <img src="../assets/usu-cs-logo2.png" style="width:300px"/>
+          </div>
+          <br>
+
+        </div>
+      </div>
+    </div>
+
+
+
+    <!-------------------- Scripts -------------------->
+    <script src="./sidebar.js"></script>
+
+  </body>
+</html>
