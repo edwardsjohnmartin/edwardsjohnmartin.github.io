@@ -12,9 +12,17 @@
 
     <style>
       /*table { border: 1px solid powderblue; border-collapse: collapse; }*/
-      table { border: none; border-collapse: collapse; }
-      td { text-align:center; }
-      textarea { width:100%; }
+      table {
+          border: none;
+          border-collapse: collapse;
+          /*width: 800px;*/
+          width: 100%;
+      }
+      td {
+          text-align:center;
+          /*white-space: nowrap;*/
+      }
+      textarea { width:95%; }
       tr.selected { background-color:powderblue; }
     </style>
     <!--link rel="stylesheet" href="https://unpkg.com/x-data-spreadsheet@1.1.5/dist/xspreadsheet.css">
@@ -26,12 +34,12 @@
   </head>
 
   <body onload="onload()">
-
-    <textarea id="textarea" name="textarea" rows="50" cols="120">File text</textarea>
+    <textarea id="textarea" name="textarea" rows="20" cols="120">File text</textarea>
     
     <br>
     <label for="files">File:</label>
     <select name="files" id="files" onchange="fileChanged()"></select>
+    <text id="loading">Loading...</text>
 
     <br>
     <label for="slider">Playback:</label>
@@ -45,20 +53,25 @@
     <text id="event-num"></text>
 
     <br>
-    <input id="file-selector" type="file" accept=".log, .csv"></input>
+    PyPhanon: <input id="pyp-selector" type="file" accept=".log, .csv" change="pypChanged()"></input>
+    <br>
+    ShowYourWork: <input id="syw-selector" type="file" accept=".log, .csv" change="sywChanged()"></input>
+    <br>
+    ProgSnap2: <input id="ps2-selector" type="file" accept=".ps2, .log, .csv" change="ps2Changed()"></input>
     <!--br>
     <text id="filepath"></text-->
 
     <div>
-      <table style="width: 600px">
+      <table>
         <colgroup>
-          <col span="1" style="width: 15%;">
-          <col span="1" style="width: 15%;">
-          <col span="1" style="width: 20%;">
-          <col span="1" style="width: 20%;">
-          <col span="1" style="width: 10%;">
-          <col span="1" style="width: 10%;">
-          <col span="1" style="width: 10%;">
+          <col span="1" style="width: 8%;">
+          <col span="1" style="width: 8%;">
+          <col span="1" style="width: 8%;">
+          <col span="1" style="width: 23%;">
+          <col span="1" style="width: 23%;">
+          <col span="1" style="width: 5%;">
+          <col span="1" style="width: 13%;">
+          <col span="1" style="width: 12%;">
         </colgroup>
 
         <tbody id="table">
