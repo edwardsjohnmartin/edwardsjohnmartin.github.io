@@ -37,9 +37,17 @@
     <textarea id="textarea" name="textarea" rows="20" cols="120">File text</textarea>
     
     <br>
+    <label for="subjects">SubjectID:</label>
+    <select name="subjects" id="subjects" onchange="subjectChanged()"></select>
+    <text id="loading">Loading...</text>
+
+    <br>
+    <label for="assignments">AssignmentID:</label>
+    <select name="assignments" id="assignments" onchange="assignmentChanged()"></select>
+
+    <br>
     <label for="files">File:</label>
     <select name="files" id="files" onchange="fileChanged()"></select>
-    <text id="loading">Loading...</text>
 
     <br>
     <label for="slider">Playback:</label>
@@ -53,11 +61,11 @@
     <text id="event-num"></text>
 
     <br>
+    ProgSnap2: <input id="ps2-selector" type="file" accept=".csv, .ps2, .log" change="ps2Changed()"></input>
+    <!--br>
     PyPhanon: <input id="pyp-selector" type="file" accept=".log, .csv" change="pypChanged()"></input>
     <br>
-    ShowYourWork: <input id="syw-selector" type="file" accept=".log, .csv" change="sywChanged()"></input>
-    <br>
-    ProgSnap2: <input id="ps2-selector" type="file" accept=".ps2, .log, .csv" change="ps2Changed()"></input>
+    ShowYourWork: <input id="syw-selector" type="file" accept=".log, .csv" change="sywChanged()"></input-->
     <!--br>
     <text id="filepath"></text-->
 
