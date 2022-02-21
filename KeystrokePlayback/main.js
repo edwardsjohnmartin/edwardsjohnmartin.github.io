@@ -8,30 +8,18 @@ var filesWidget = document.getElementById('files');
 var table = document.getElementById('table');
 var slider = document.getElementById('slider');
 var editNumWidget = document.getElementById('edit-num');
-var eventNumWidget = document.getElementById('event-num');
+var eventNumWidget = null;//document.getElementById('event-num');
 var textarea = document.getElementById('textarea');
 editNumWidget.innerHTML = slider.value; // Display the default slider value
+
+var findStringWidget = document.getElementById('findString');
+
 
 function removeAllChildNodes(parent) {
     while (parent.firstChild) {
         parent.removeChild(parent.firstChild);
     }
 }
-
-// function pypChanged(event) {
-//   // console.log('here');
-//   const fileList = event.target.files;
-//   if (fileList.length > 0) {
-//     ET_EDIT = 'e';
-//     const file = fileList[0];
-//     let header = 'EventType,InsertText,DeleteText,CodeStateSection,ClientTimestamp,X-File,Version,X-Session\n'
-//     readFile(file, header);
-//   }
-// }
-
-// function sywChanged(event) {
-//   pypChanged(event);
-// }
 
 function ps2Changed(event) {
   const fileList = event.target.files;
@@ -41,20 +29,131 @@ function ps2Changed(event) {
   }
 }
 
-function onload() {
-  document.getElementById('ps2-selector').addEventListener('change', ps2Changed);
+function incFile(inc) {
+  if (inc == 1) {
+    if (filesWidget.selectedIndex < filesWidget.options.length-1) {
+      filesWidget.selectedIndex += 1;
+      fileChanged();
+    } else if (assignmentsWidget.selectedIndex < assignmentsWidget.options.length-1) {
+      assignmentsWidget.selectedIndex += 1;
+      assignmentChanged();
+    } else if (subjectsWidget.selectedIndex < subjectsWidget.options.length-1) {
+      subjectsWidget.selectedIndex += 1;
+      subjectChanged();
+    } else {
+      return false;
+    }
+  } else {
+    if (filesWidget.selectedIndex > 0) {
+      filesWidget.selectedIndex -= 1;
+      fileChanged();
+    } else if (assignmentsWidget.selectedIndex > 0) {
+      assignmentsWidget.selectedIndex -= 1;
+      assignmentChanged();
+    } else if (subjectsWidget.selectedIndex > 0) {
+      subjectsWidget.selectedIndex -= 1;
+      subjectChanged();
+    } else {
+      return false;
+    }
+  }
+  return true;
+}
 
-  // Load a file automatically for testing
-  $.ajax({
-    async:true,
-    // url: 'deident.csv',
-    url: 'test.csv',
-    dataType: 'text',
-    success: function(data) 
-    {
-      parseCSV(data);
+let controlKey = false;
+function onload() {
+  // let msg = document.getDocumentById('#message');
+
+  document.addEventListener("keydown", (event) => {
+    console.log(event.key);
+
+    if (event.key == 'ArrowRight') {
+      let i = findString(findStringWidget.value);
+      if (i > -1) {
+        slider.value = i;
+        sliderChanged(slider);
+        return;
+      }
+    }    
+
+    // if (event.key == 'Shift') {
+    //   slider.step = 10;
+    // } else if (event.key == 'Control') {
+    //   controlKey = true;
+    // }
+  });
+  document.addEventListener("keyup", (event) => {
+    // if (event.key == 'Shift') {
+    //   slider.step = 1;
+    // } else if (event.key == 'Control') {
+    //   controlKey = false;
+    // }
+  });
+  document.addEventListener("keypress", (event) => {
+    console.log(event.key);
+
+    let inc = 'f'
+    let dec = 'd'
+    let inc10 = 'F'
+    let dec10 = 'D'
+    let incCheck = 'g'
+    let decCheck = 's'
+    
+    if (event.key == incCheck) {
+      if (slider.value == slider.max) {
+        if (incFile(1)) {
+          slider.value = 0;
+          sliderChanged(slider);
+        }
+      } else {
+        slider.value = getNextCheckpoint();
+        sliderChanged(slider);
+      }
+    } else if (event.key == decCheck) {
+      if (slider.value == 0) {
+        incFile(-1);
+      } else {
+        slider.value = getPrevCheckpoint();
+        sliderChanged(slider);
+      }
+    } else if (event.key == 'j') {
+      incFile(1);
+    } else if (event.key == 'k') {
+      incFile(0);
+    } else if (event.key == 'a') {
+      slider.value = 0;
+      sliderChanged(slider);
+    } else if (event.key == 'e') {
+      slider.value = slider.max;
+      sliderChanged(slider);
+    } else if (event.key == dec) {
+      slider.value = +slider.value - 1;
+      sliderChanged(slider);
+    } else if (event.key == inc) {
+      slider.value = +slider.value + 1;
+      sliderChanged(slider);
+    } else if (event.key == dec10) {
+      slider.value = +slider.value - 10;
+      sliderChanged(slider);
+    } else if (event.key == inc10) {
+      slider.value = +slider.value + 10;
+      sliderChanged(slider);
     }
   });
+
+  document.getElementById('ps2-selector').addEventListener('change', ps2Changed);
+
+  // // Load a file automatically for testing
+  // $.ajax({
+  //   async:true,
+  //   // url: 'deident.csv',
+  //   url: 'test.csv',
+  //   dataType: 'text',
+  //   success: function(data) 
+  //   {
+  //     parseCSV(data);
+  //   }
+  // });
 }
 
 // All data
@@ -82,6 +181,14 @@ function parseCSV(data) {
 
   // Sort the original file
   dfall.sort((a,b) => {
+    if (a.SubjectID != b.SubjectID) {
+      return ('' + a.SubjectID).localeCompare(b.SubjectID)
+      // return a.SubjectID - b.SubjectID
+    }
+    if (a.AssignmentID != b.AssignmentID) {
+      return ('' + a.AssignmentID).localeCompare(b.AssignmentID)
+      // return a.AssignmentID - b.AssignmentID
+    }
     return a.ClientTimestamp - b.ClientTimestamp;
   });
 
@@ -109,6 +216,7 @@ function updateSubjectWidget() {
   });
 
   removeAllChildNodes(subjectsWidget);
+  subjects = Array.from(subjects).sort()
   subjects.forEach(file => {
     var element = document.createElement("option");
     element.innerText = file;
@@ -131,6 +239,7 @@ function updateAssignmentWidget() {
   });
 
   removeAllChildNodes(assignmentsWidget);
+  assignments = Array.from(assignments).sort()
   assignments.forEach(file => {
     var element = document.createElement("option");
     element.innerText = file;
@@ -149,10 +258,11 @@ function assignmentChanged() {
 function updateFileWidget() {
   let files = new Set();
   dfAssign.forEach(row => {
-    files.add(row['X-File']);
+    files.add(row['CodeStateSection']);
   });
 
   removeAllChildNodes(filesWidget);
+  files = Array.from(files).sort()
   files.forEach(file => {
     var element = document.createElement("option");
     element.innerText = file;
@@ -167,13 +277,59 @@ function fileChanged() {
   loadingWidget.style.visibility = 'visible';
   file = filesWidget.value;
 
-  df = dfAssign.filter(row => row['X-File'] == file);
+  df = dfAssign.filter(row => row['CodeStateSection'] == file);
   slider.max = df.length-1;
   slider.value = slider.max;
   // slider.value = 0;
   editNumWidget.innerHTML = slider.value;
   reconstruct(df);
   loadingWidget.style.visibility = 'hidden';
+}
+
+function getNextCheckpoint() {
+  if (slider.value == slider.max) return slider.max;
+  for (let i = +slider.value+1; i <= +slider.max; ++i) {
+    let row = df[i];
+    if (row.EditType == 'X-Checkpoint') {
+      return i;
+    }
+  }
+  return slider.max;
+}
+
+function getPrevCheckpoint() {
+  if (slider.value == 0) return 0;
+  for (let i = slider.value-1; i > 0; --i) {
+    let row = df[i];
+    if (row.EditType == 'X-Checkpoint') {
+      return i;
+    }
+  }
+  return 0;
+}
+
+function findString(toFind) {
+  if (df.length == 0) {
+    return -1;
+  }
+  
+  // Reconstruct the file
+  let s = '';
+  for (let i = 0; i <= slider.max; ++i) {
+    let row = df[i];
+    let j = +row.SourceLocation;
+    if (row.DeleteText && row.DeleteText.length > 0) {
+      s = s.slice(0,j) + s.slice(j+row.DeleteText.length);
+    }
+    if (row.InsertText && row.InsertText.length > 0) {
+      s = s.slice(0,j) + row.InsertText + s.slice(j);
+    }
+
+    if (s.indexOf(toFind) > -1) {
+      return i;
+    }
+  }
+  return -1;
 }
 
 function reconstruct(df) {
@@ -190,7 +346,7 @@ function reconstruct(df) {
   if (df.length > 0) {
     for (let i = 0; i <= slider.value; ++i) {
       let row = df[i];
-      let j = +row.CodeStateSection;
+      let j = +row.SourceLocation;
       if (row.DeleteText && row.DeleteText.length > 0) {
         s = s.slice(0,j) + s.slice(j+row.DeleteText.length);
       }
@@ -203,11 +359,14 @@ function reconstruct(df) {
   textarea.value = s;
   
   eventNum = df[slider.value].EventIdx;
-  eventNumWidget.innerHTML = eventNum;
+  if (eventNumWidget != null) {
+    eventNumWidget.innerHTML = eventNum;
+  }
 
   // Update the table
   s = ''+
     '<tr>'+
+    ' <th>Assn</th>'+
     ' <th>File</th>'+
     ' <th>Event</th>'+
     ' <th>EventType</th>'+
@@ -215,7 +374,8 @@ function reconstruct(df) {
     ' <th>DeleteText</th>'+
     ' <th>i</th>'+
     ' <th>Time</th>'+
-    ' <th>X-Session</th>';
+    ' <th>EditType</th>';
+    // ' <th>X-Session</th>';
   const n = 5;
   let start = eventNum >= n ? eventNum-n : 0;
   let end = eventNum <= dfall.length-n ? eventNum+n : dfall.length;
@@ -229,7 +389,9 @@ function reconstruct(df) {
     let del = row.DeleteText.length<20 ? row.DeleteText :
         `<b>${row.DeleteText.slice(0,m)}...${row.DeleteText.slice(-m)}[${row.DeleteText.length}]</b>`;
     del = del.replace(' ', '&bull;');
-    s += `<tr ${selected}> <td>${row['X-File']}</td> <td>${row.EventIdx}</td> <td>${row.EventType}</td> <td>${insert}</td> <td>${del}</td> <td>${row.CodeStateSection}</td> <td>${row.ClientTimestamp}</td> <td>${row.Session}</td>\n`;
+    let last = row.Session;
+    last = row.EditType;
+    s += `<tr ${selected}> <td>${row.AssignmentID}</td> <td>${row['CodeStateSection']}</td> <td>${row.EventIdx}</td> <td>${row.EventType}</td> <td>${insert}</td> <td>${del}</td> <td>${row.SourceLocation}</td> <td>${row.ClientTimestamp}</td> <td>${last}</td>\n`;
   }
 
   table.innerHTML = s;
@@ -245,10 +407,14 @@ function readFile(file, header) {
   reader.readAsText(file);
 }
 
+function sliderChanged(slider) {
+  editNumWidget.innerHTML = slider.value;//this.value;
+  reconstruct(df);
+}
+
 // Update the current slider value (each time you drag the slider handle)
 slider.oninput = function() {
-  editNumWidget.innerHTML = this.value;
-  reconstruct(df);
+  sliderChanged(this);
 }
 
 

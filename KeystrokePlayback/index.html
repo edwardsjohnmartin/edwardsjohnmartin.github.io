@@ -34,20 +34,22 @@
   </head>
 
   <body onload="onload()">
-    <textarea id="textarea" name="textarea" rows="20" cols="120">File text</textarea>
+    <textarea id="textarea" name="textarea" rows="30" cols="120">File text</textarea>
     
     <br>
     <label for="subjects">SubjectID:</label>
     <select name="subjects" id="subjects" onchange="subjectChanged()"></select>
-    <text id="loading">Loading...</text>
 
-    <br>
     <label for="assignments">AssignmentID:</label>
     <select name="assignments" id="assignments" onchange="assignmentChanged()"></select>
 
-    <br>
     <label for="files">File:</label>
     <select name="files" id="files" onchange="fileChanged()"></select>
+
+    <label for="findString">Search string (use arrows):</label>
+    <input name="findString" id="findString" type="text"></select>
+
+    <text id="loading">Loading...</text>
 
     <br>
     <label for="slider">Playback:</label>
@@ -56,28 +58,27 @@
     <br>
     <label for="edit-num">Edit number:</label>
     <text id="edit-num"></text>
-    <br>
+    <!--br>
     <label for="event-num">Event number:</label>
-    <text id="event-num"></text>
+    <text id="event-num"></text-->
 
     <br>
     ProgSnap2: <input id="ps2-selector" type="file" accept=".csv, .ps2, .log" change="ps2Changed()"></input>
     <!--br>
-    PyPhanon: <input id="pyp-selector" type="file" accept=".log, .csv" change="pypChanged()"></input>
-    <br>
-    ShowYourWork: <input id="syw-selector" type="file" accept=".log, .csv" change="sywChanged()"></input-->
-    <!--br>
-    <text id="filepath"></text-->
+    <label for="idfilter">SubjectID filter:</label>
+    <input type="text" id="idfilter"></input-->
+                          
 
     <div>
       <table>
         <colgroup>
-          <col span="1" style="width: 8%;">
-          <col span="1" style="width: 8%;">
-          <col span="1" style="width: 8%;">
+          <col span="1" style="width: 4%;">
+          <col span="1" style="width: 7%;">
+          <col span="1" style="width: 7%;">
+          <col span="1" style="width: 7%;">
           <col span="1" style="width: 23%;">
           <col span="1" style="width: 23%;">
-          <col span="1" style="width: 5%;">
+          <col span="1" style="width: 4%;">
           <col span="1" style="width: 13%;">
           <col span="1" style="width: 12%;">
         </colgroup>
@@ -86,6 +87,16 @@
         </tbody>
       </table>
     </div>
+
+    <br>
+    Helpful keystrokes:
+    <br>f - move forward one event
+    <br>d - move backward one event
+    <br>F - more forward 10 events
+    <br>D - move backward 10 events
+    <br>g - move forward to next checkpoint event
+    <br>s - move backward to next checkpoint event
+    <br>right arrow - move forward to first snapshot containing the search string
 
     <script src="./main.js"></script>
   </body>
