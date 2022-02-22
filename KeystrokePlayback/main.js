@@ -1,3 +1,5 @@
+var errorWidget = document.getElementById('compileError');
+errorWidget.style.visibility = 'hidden';
 var loadingWidget = document.getElementById('loading');
 loadingWidget.style.visibility = 'hidden';
 
@@ -65,7 +67,7 @@ function onload() {
   // let msg = document.getDocumentById('#message');
 
   document.addEventListener("keydown", (event) => {
-    console.log(event.key);
+    // console.log(event.key);
 
     if (event.key == 'ArrowRight') {
       let i = findString(findStringWidget.value);
@@ -90,7 +92,7 @@ function onload() {
     // }
   });
   document.addEventListener("keypress", (event) => {
-    console.log(event.key);
+    // console.log(event.key);
 
     let inc = 'f'
     let dec = 'd'
@@ -358,6 +360,15 @@ function reconstruct(df) {
 
   textarea.value = s;
   
+  try {
+    filbert.parse(s);
+    errorWidget.style.visibility = 'hidden';
+  } catch(e) {
+    errorWidget.style.visibility = 'visible';
+  }
+
+
+
   eventNum = df[slider.value].EventIdx;
   if (eventNumWidget != null) {
     eventNumWidget.innerHTML = eventNum;

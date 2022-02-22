@@ -24,6 +24,7 @@
       }
       textarea { width:95%; }
       tr.selected { background-color:powderblue; }
+      #compileError { background-color:red; }
     </style>
     <!--link rel="stylesheet" href="https://unpkg.com/x-data-spreadsheet@1.1.5/dist/xspreadsheet.css">
     <script src="https://unpkg.com/x-data-spreadsheet@1.1.5/dist/xspreadsheet.js"></script>
@@ -48,6 +49,8 @@
 
     <label for="findString">Search string (use arrows):</label>
     <input name="findString" id="findString" type="text"></select>
+
+    <text id="compileError">Error compiling</text>
 
     <text id="loading">Loading...</text>
 
@@ -98,6 +101,7 @@
     <br>s - move backward to next checkpoint event
     <br>right arrow - move forward to first snapshot containing the search string
 
+    <script src="./filbert.js"></script>
     <script src="./main.js"></script>
   </body>
 </html>
