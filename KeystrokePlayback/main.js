@@ -1,3 +1,6 @@
+//-----------------------------------------------------------------------------
+// Widgets
+//-----------------------------------------------------------------------------
 var errorWidget = document.getElementById('compileError');
 errorWidget.style.visibility = 'hidden';
 var loadingWidget = document.getElementById('loading');
@@ -16,7 +19,42 @@ editNumWidget.innerHTML = slider.value; // Display the default slider value
 
 var findStringWidget = document.getElementById('findString');
 
+//-----------------------------------------------------------------------------
+// File-in-memory variables
+//-----------------------------------------------------------------------------
+let csvFile = null;
+// Key is subject+assignment+file
+let key2chunks = {};
+// The chunks that are in memory
+let chunksInMemory = new Set();
 
+//-----------------------------------------------------------------------------
+// updatedfall
+// If a subject/assignment/file combination is chosen that isn't in memory,
+// read it in.
+//-----------------------------------------------------------------------------
+function updatedfall() {
+  // Everything was read in
+  if (Object.keys(key2chunks).length == 0) return;
+  
+  let subjectID = subjectsWidget.value;
+  let assignmentID = assignmentsWidget.value;
+  let file = filesWidget.value;
+  
+  let chunks = key2chunks[subjectID+assignmentID+file];
+
+  // Already in memory
+  if (chunksInMemory.has(chunks[0]) &&
+      (chunks.length==1 || chunksInMemory.has(chunks[1])))
+    return;
+
+  // Read in chunks
+  readTwoChunks(csvFile, null);
+}
+
+//-----------------------------------------------------------------------------
+// removeAllChildNodes
+//-----------------------------------------------------------------------------
 function removeAllChildNodes(parent) {
     while (parent.firstChild) {
         parent.removeChild(parent.firstChild);
@@ -33,6 +71,8 @@ function ps2Changed(event) {
     if (file.size < CHUNK_SIZE) {
       readFileFull(file, '');
     } else {
+      // window.alert('csv file too large to fit in memory. ' +
+      //              'Files may load slightly slower.');
       readFilePartial(file, '');
     }
   }
@@ -149,6 +189,8 @@ function onload() {
   //   dataType: 'text',
   //   success: function(data) 
   //   {
+  //     // dfall = $.csv.toObjects(data);
+  //     // loadData(data);
   //     parseCSV(data);
   //   }
   // });
@@ -165,43 +207,18 @@ let df = null;
 let editNum2rowNum = null;
 let file = null;
 
-function parseCSV(data) {
-  loadingWidget.style.visibility = 'visible';
-
-  // let maxSize = 30000000;
-  // if (data.length > maxSize) {
-  //   window.alert('Max size exceeded. Truncating data. '+
-  //                'If data was not sorted by subject then timestamp then unexpected behavior may occur.');
-  //   data = data.slice(0, maxSize);
-  // }
-
-  dfall = $.csv.toObjects(data);
-
-  // Sort the original file
-  dfall.sort((a,b) => {
-    if (a.SubjectID != b.SubjectID) {
-      return ('' + a.SubjectID).localeCompare(b.SubjectID)
-      // return a.SubjectID - b.SubjectID
-    }
-    if (a.AssignmentID != b.AssignmentID) {
-      return ('' + a.AssignmentID).localeCompare(b.AssignmentID)
-      // return a.AssignmentID - b.AssignmentID
-    }
-    return a.ClientTimestamp - b.ClientTimestamp;
-  });
-
-
+// Converts timestamp to an integer and sets EventIdx.
+function prepdfall() {
   let i = 0;
   dfall.forEach(row => {
-    if (row['X-Session']) {
-      row['X-Session'] = +row['X-Session'];
-    } else {
-      row['X-Session'] == null;
-    }
     row.ClientTimestamp = +row.ClientTimestamp;
     row['EventIdx'] = i;
     i++;
   });
+}
+
+function loadData() {//data) {
+  loadingWidget.style.visibility = 'visible';
 
   updateSubjectWidget();
   loadingWidget.style.visibility = 'hidden';
@@ -212,6 +229,8 @@ function updateSubjectWidget() {
   dfall.forEach(row => {
     subjects.add(row['SubjectID']);
   });
+
+  console.log(subjects);
 
   removeAllChildNodes(subjectsWidget);
   subjects = Array.from(subjects).sort()
@@ -272,8 +291,9 @@ function updateFileWidget() {
 }
 
 function fileChanged() {
-  loadingWidget.style.visibility = 'visible';
   file = filesWidget.value;
+  updatedfall();
+  loadingWidget.style.visibility = 'visible';
 
   df = dfAssign.filter(row => row['CodeStateSection'] == file);
   slider.max = df.length-1;
@@ -404,12 +424,32 @@ function reconstruct(df) {
   table.innerHTML = s;
 }
 
+function parseCSV(data) {
+  dfall = $.csv.toObjects(data);
+
+  // Sort the original file
+  dfall.sort((a,b) => {
+    if (a.SubjectID != b.SubjectID) {
+      return ('' + a.SubjectID).localeCompare(b.SubjectID)
+      // return a.SubjectID - b.SubjectID
+    }
+    if (a.AssignmentID != b.AssignmentID) {
+      return ('' + a.AssignmentID).localeCompare(b.AssignmentID)
+      // return a.AssignmentID - b.AssignmentID
+    }
+    return a.ClientTimestamp - b.ClientTimestamp;
+  });
+
+  prepdfall();
+  loadData();//header+data);
+}
+
 function readFileFull(file, header) {
   loadingWidget.style.visibility = 'visible';
   const reader = new FileReader();
   reader.addEventListener('load', (event) => {
     const data = event.target.result;
-    parseCSV(header+data);
+    parseCSV(data);
   });
   reader.readAsText(file);
 }
@@ -425,23 +465,25 @@ function readFilePartial(file, header) {
   // console.log(file.size);
   // let blob = file.slice(0, 100);
   // reader.readAsText(blob);
-  readChunks(file, (x) => {console.log('callback');});
+  csvFile = file;
+  readAllChunks(file, (x) => {console.log('callback');});
 }
 
-let key2chunks = {};
-
-function readChunks(file, callback) {
+let header = null;
+let chunkOffsets = [0];
+function readAllChunks(file, callback) {
+  header = null;
   Papa.parse(file, {
-    delimiter: ",",
-    newline: "\n",
     header: true,
-    // dynamicTyping: false,
     worker: false,
     chunk: function(results) {
-      // rows = rows.concat(results.data);
-      console.log('chunk', results.data[0]);
+      if (header == null) {
+        header = results.meta.fields;
+      }
       // console.log(results);
-      console.log(results.meta.cursor);
+      // console.log('chunk', results.data[0]);
+      // console.log('chunk', results.meta.cursor);
+      console.log('chunk', chunkOffsets.length-1);
 
       let rows = results.data;
       let cursor = results.meta.cursor;
@@ -451,36 +493,86 @@ function readChunks(file, callback) {
           rows[0].AssignmentID +
           rows[0].CodeStateSection;
       if (curKey in key2chunks) {
-        key2chunks[curKey].push(cursor);
+        // key2chunks[curKey].push(cursor);
+        key2chunks[curKey].push(chunkOffsets.length-1);
       } else {
-          key2chunks[curKey] = [cursor];
+          key2chunks[curKey] = [chunkOffsets.length-1];
       }
       
       rows.forEach(row => {
         let key = row.SubjectID+row.AssignmentID+row.CodeStateSection;
         if (key != curKey) {
-          key2chunks[key] = [cursor];
+          // key2chunks[key] = [cursor];
+          key2chunks[key] = [chunkOffsets.length-1];
           curKey = key;
         }
       });
+      chunkOffsets.push(cursor);
     },
     complete: function() {
-      console.log('complete');
-      console.log(key2chunks);
-      // var list = new VirtualList({
-      //   h: 300,
-      //   itemHeight: 30,
-      //   totalRows: rows.length,
-      //   generatorFn: function(row) {
-      //     var el = document.createElement("div");
-      //     el.innerHTML = "<p>ITEM " + row + ' -> ' + rows[row].join(' - ') + "</p>";
-      //     return el;
-      //   }
-      // });
-      // document.body.appendChild(list.container)
+      console.log('completed reading chunks');
+      // chunkOffsets = chunkOffsets.slice(0, -1);
+      // console.log(chunkOffsets);
+
+      readTwoChunks(0);
     }
   });
 
+}
+
+function readTwoChunks(chunkIdx) {
+  console.log('readTwoChunks', chunkIdx);
+
+  if (chunkIdx == chunkOffsets.length-1) {
+    chunkIdx-=2;
+  } else if (chunkIdx == chunkOffsets.length-2) {
+    chunkIdx-=1;
+  }
+  var offset = chunkOffsets[chunkIdx];
+  var chunkSize = chunkOffsets[chunkIdx+2] - offset;
+  var fr = new FileReader();
+  
+  let subjectIdx = header.findIndex((e) => e=='SubjectID');
+  let assignIdx = header.findIndex((e) => e=='AssignmentID');
+  let fileIdx = header.findIndex((e) => e=='CodeStateSection');
+  
+  fr.onload = function() {
+    let data = event.target.result;
+    var istart = Date.now();
+    
+    if (offset == 0) {
+      dfall = $.csv.toObjects(data);
+    } else {
+      // Add the header for the parse
+      dfall = $.csv.toObjects(header.join(',')+'\n'+data);
+    }
+
+    prepdfall();
+
+    // console.log(dfall[0]);
+    console.log(`Read chunk in ${(Date.now() - istart)/1000.0} seconds`);
+
+    // offset += CHUNK_SIZE;
+    // seek();
+
+    chunksInMemory = new Set([chunkIdx, chunkIdx+1]);
+    updateSubjectWidget();
+
+  };
+  fr.onerror = function() {
+    console.log('Error reading chunks');
+  };
+  seek();
+
+  function seek() {
+    // Should be >=?
+    if (offset+chunkSize > csvFile.size) {
+      console.error('Error: offset+chunk size is greater than file size');
+      return;
+    }
+    var slice = csvFile.slice(offset, offset + chunkSize);
+    fr.readAsText(slice);
+  }
 }
 
 function readChunksBak(file, callback) {
