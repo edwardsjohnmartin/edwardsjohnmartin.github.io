@@ -23,11 +23,18 @@ function removeAllChildNodes(parent) {
     }
 }
 
+// Read files in chunks of 16 Mb
+const CHUNK_SIZE = 2**24;
+
 function ps2Changed(event) {
   const fileList = event.target.files;
   if (fileList.length > 0) {
     const file = fileList[0];
-    readFile(file, '');
+    if (file.size < CHUNK_SIZE) {
+      readFileFull(file, '');
+    } else {
+      readFilePartial(file, '');
+    }
   }
 }
 
@@ -77,19 +84,8 @@ function onload() {
         return;
       }
     }    
-
-    // if (event.key == 'Shift') {
-    //   slider.step = 10;
-    // } else if (event.key == 'Control') {
-    //   controlKey = true;
-    // }
   });
   document.addEventListener("keyup", (event) => {
-    // if (event.key == 'Shift') {
-    //   slider.step = 1;
-    // } else if (event.key == 'Control') {
-    //   controlKey = false;
-    // }
   });
   document.addEventListener("keypress", (event) => {
     // console.log(event.key);
@@ -172,12 +168,12 @@ let file = null;
 function parseCSV(data) {
   loadingWidget.style.visibility = 'visible';
 
-  let maxSize = 30000000;
-  if (data.length > maxSize) {
-    window.alert('Max size exceeded. Truncating data. '+
-                 'If data was not sorted by subject then timestamp then unexpected behavior may occur.');
-    data = data.slice(0, maxSize);
-  }
+  // let maxSize = 30000000;
+  // if (data.length > maxSize) {
+  //   window.alert('Max size exceeded. Truncating data. '+
+  //                'If data was not sorted by subject then timestamp then unexpected behavior may occur.');
+  //   data = data.slice(0, maxSize);
+  // }
 
   dfall = $.csv.toObjects(data);
 
@@ -408,7 +404,7 @@ function reconstruct(df) {
   table.innerHTML = s;
 }
 
-function readFile(file, header) {
+function readFileFull(file, header) {
   loadingWidget.style.visibility = 'visible';
   const reader = new FileReader();
   reader.addEventListener('load', (event) => {
@@ -416,6 +412,274 @@ function readFile(file, header) {
     parseCSV(header+data);
   });
   reader.readAsText(file);
+}
+
+function readFilePartial(file, header) {
+  // loadingWidget.style.visibility = 'visible';
+  // const reader = new FileReader();
+  // reader.addEventListener('load', (event) => {
+  //   const data = event.target.result;
+  //   // parseCSV(header+data);
+  //   console.log(data);
+  // });
+  // console.log(file.size);
+  // let blob = file.slice(0, 100);
+  // reader.readAsText(blob);
+  readChunks(file, (x) => {console.log('callback');});
+}
+
+let key2chunks = {};
+
+function readChunks(file, callback) {
+  Papa.parse(file, {
+    delimiter: ",",
+    newline: "\n",
+    header: true,
+    // dynamicTyping: false,
+    worker: false,
+    chunk: function(results) {
+      // rows = rows.concat(results.data);
+      console.log('chunk', results.data[0]);
+      // console.log(results);
+      console.log(results.meta.cursor);
+
+      let rows = results.data;
+      let cursor = results.meta.cursor;
+
+      // Get the first row and add to existing list of cursor positions.
+      let curKey = rows[0].SubjectID +
+          rows[0].AssignmentID +
+          rows[0].CodeStateSection;
+      if (curKey in key2chunks) {
+        key2chunks[curKey].push(cursor);
+      } else {
+          key2chunks[curKey] = [cursor];
+      }
+      
+      rows.forEach(row => {
+        let key = row.SubjectID+row.AssignmentID+row.CodeStateSection;
+        if (key != curKey) {
+          key2chunks[key] = [cursor];
+          curKey = key;
+        }
+      });
+    },
+    complete: function() {
+      console.log('complete');
+      console.log(key2chunks);
+      // var list = new VirtualList({
+      //   h: 300,
+      //   itemHeight: 30,
+      //   totalRows: rows.length,
+      //   generatorFn: function(row) {
+      //     var el = document.createElement("div");
+      //     el.innerHTML = "<p>ITEM " + row + ' -> ' + rows[row].join(' - ') + "</p>";
+      //     return el;
+      //   }
+      // });
+      // document.body.appendChild(list.container)
+    }
+  });
+
+}
+
+function readChunksBak(file, callback) {
+  // 1 KB at a time, because we expect that the column will probably small.
+  // var CHUNK_SIZE = 1024;
+  var offset = 0;
+  var fr = new FileReader();
+  var header = '';
+  var subjectIdx = -1;
+  var assignIdx = -1;
+  var fileIdx = -1;
+  
+  // // signals to only parse rows 3 and 4
+  // var rowRange = function(entry, state) {
+  //   var start = 3;
+  //   var end = 4;
+  //   if(state.rowNum >= start && state.rowNum <= end) {
+  //     return entry;
+  //   }
+  //   return false;
+  // }  
+  // $.csv.toArrays(testHook3, { onParseEntry: rowRange });
+
+  fr.onload = function() {
+    let data = event.target.result;
+    {
+      var istart = Date.now();
+
+      // let rows = $.csv.toArrays(data);
+
+      // signals to only parse rows 3 and 4
+      var rowRange = function(entry, state) {
+        console.log(entry);
+        console.log(state);
+        // var start = 3;
+        // var end = 4;
+        // if(state.rowNum >= start && state.rowNum <= end) {
+        //   return entry;
+        // }
+        // return false;
+        return true;
+      }  
+      let rows = $.csv.toArrays(data, { onParseEntry: rowRange });
+
+      
+      if (data.length == CHUNK_SIZE) {
+        // Don't read the last line if we're not at the last read since
+        // the last line will likely not be completely read.
+        rows = rows.slice(0,-1);
+      }
+      if (offset == 0) {
+        header = rows[0];
+        // Remove header
+        rows = rows.slice(1);
+
+        subjectIdx = header.findIndex((e) => e=='SubjectID');
+        assignIdx = header.findIndex((e) => e=='AssignmentID');
+        fileIdx = header.findIndex((e) => e=='CodeStateSection');
+      }
+
+      let istartRow = 0;
+      for (let i = 0; i < rows.length-1; ++i) {
+        let irow = rows[i];
+        let jrow = rows[i+1];
+
+        let isubject = irow[subjectIdx];
+        let iassign = irow[assignIdx];
+        let icodeFile = irow[fileIdx];
+
+        let jsubject = jrow[subjectIdx];
+        let jassign = jrow[assignIdx];
+        let jcodeFile = jrow[fileIdx];
+
+        if (isubject != jsubject ||
+            iassign != jassign ||
+            icodeFile != jcodeFile) {
+          console.log(istartRow, isubject, iassign, icodeFile);
+          iStartRow = i+1;
+        }
+      }
+
+
+      console.log(Date.now() - istart);
+
+      istart = Date.now();
+      let lines = $.csv.parsers.splitLines(data);
+      console.log(Date.now() - istart);
+    }
+    
+    // // let data = event.target.result;
+    // let lines = $.csv.parsers.splitLines(data);
+    // if (data.length == CHUNK_SIZE) {
+    //   // Don't read the last line if we're not at the last read since
+    //   // the last line will likely not be completely read.
+    //   lines = lines.slice(0,-1);
+    // }
+    // if (offset == 0) {
+    //   // Get header array
+    //   // header = data.slice(0, data.indexOf('\n')).split(',');
+    //   header = lines[0].split(',');
+    //   // Remove header
+    //   // data = data.slice(data.indexOf('\n')+1);
+    //   data = lines.slice(1);
+
+    //   subjectIdx = header.findIndex((e) => e=='SubjectID');
+    //   assignIdx = header.findIndex((e) => e=='AssignmentID');
+    //   fileIdx = header.findIndex((e) => e=='CodeStateSection');
+    // }
+
+    // var start = Date.now();
+
+    // // const rows = data.split('\n');
+    // const rows = lines;
+    // let k = 0;
+    // let reachedEnd = false;
+    
+    // while (!reachedEnd) {
+    //   const row = $.csv.toArray(rows[k]);
+    //   const subject = row[subjectIdx];
+    //   const assign = row[assignIdx];
+    //   const codeFile = row[fileIdx];
+
+    //   // Now do a binary search for the last entry for this
+    //   // subject, assignment, and file
+    //   const n = rows.length;
+    //   let imin = k;
+    //   let imax = rows.length-1;
+    //   let i = Math.floor((imin+imax)/2);
+    //   let found = false;
+    //   while (!found) {
+    //     let irow = $.csv.toArray(rows[i]);
+    //     let isubject = irow[subjectIdx];
+    //     let iassign = irow[assignIdx];
+    //     let icodeFile = irow[fileIdx];
+    //     // console.log(i, isubject, iassign, icodeFile);
+    //     if (isubject == subject && iassign == assign && icodeFile == codeFile) {
+    //       if (i == rows.length - 1) {
+    //         console.log('reached the end');
+    //         reachedEnd = true;
+    //         found = true;
+    //       } else {
+    //         let jrow = $.csv.toArray(rows[i+1]);
+    //         let jsubject = jrow[subjectIdx];
+    //         let jassign = jrow[assignIdx];
+    //         let jcodeFile = jrow[fileIdx];
+    //         found = (isubject != jsubject || iassign != jassign ||
+    //                  icodeFile != jcodeFile);
+    //         if (!found) {
+    //           imin = i+1;
+    //         }
+    //       }
+    //     } else {
+    //       imax = i-1;
+    //     }
+    //     if (!found) {
+    //       i = Math.floor((imin+imax)/2);
+    //     }
+    //   }
+    //   console.log(i, subject, assign, codeFile);
+    //   k = i+1;
+    // }
+
+    // console.log(rows.length);
+    
+    // var view = new Uint8Array(fr.result);
+    // for (var i = 0; i < view.length; ++i) {
+    //   if (view[i] === 10 || view[i] === 13) {
+    //     // \n = 10 and \r = 13
+    //     // column length = offset + position of \r or \n
+    //     callback(offset + i);
+    //     return;
+    //   }
+    // }
+
+    console.log('reading chunk');
+    // \r or \n not found, continue seeking.
+    offset += CHUNK_SIZE;
+    // seek();
+
+    // var end = Date.now();
+    // console.log(end-start);
+  };
+  fr.onerror = function() {
+    // Cannot read file... Do something, e.g. assume column size = 0.
+    callback(0);
+  };
+  seek();
+
+  function seek() {
+    if (offset >= file.size) {
+      // No \r or \n found. The column size is equal to the full
+      // file size
+      callback(file.size);
+      return;
+    }
+    var slice = file.slice(offset, offset + CHUNK_SIZE);
+    // fr.readAsArrayBuffer(slice);
+    fr.readAsText(slice);
+  }
 }
 
 function sliderChanged(slider) {
