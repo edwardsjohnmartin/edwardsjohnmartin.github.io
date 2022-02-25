@@ -27,6 +27,35 @@ let csvFile = null;
 let key2chunks = {};
 // The chunks that are in memory
 let chunksInMemory = new Set();
+// If a file is smaller than 16 Mb then go ahead and read it entirely into
+// memory.
+const SMALL_FILE_SIZE = 2**24;
+
+// Map of subjects/assignments/files
+let subject2assignments2files = new Map();
+
+// All data
+let dfall = null;
+// Data for the selected subject
+let dfSubject = null;
+// Data for the selected subject/assignment
+let dfAssign = null;
+// Data for the selected subject/assignment/file
+let df = null;
+let editNum2rowNum = null;
+let file = null;
+
+function add(subject, assignment, file) {
+  if (!subject2assignments2files.has(subject)) {
+    subject2assignments2files.set(subject, new Map());
+  }
+  let assignments2files = subject2assignments2files.get(subject);
+  if (!assignments2files.has(assignment)) {
+    assignments2files.set(assignment, new Set());
+  }
+  let files = assignments2files.get(assignment);
+  files.add(file);
+}
 
 //-----------------------------------------------------------------------------
 // updatedfall
@@ -35,7 +64,7 @@ let chunksInMemory = new Set();
 //-----------------------------------------------------------------------------
 function updatedfall() {
   // Everything was read in
-  if (Object.keys(key2chunks).length == 0) return;
+  if (Object.keys(key2chunks).length == 0) return true;
   
   let subjectID = subjectsWidget.value;
   let assignmentID = assignmentsWidget.value;
@@ -46,10 +75,11 @@ function updatedfall() {
   // Already in memory
   if (chunksInMemory.has(chunks[0]) &&
       (chunks.length==1 || chunksInMemory.has(chunks[1])))
-    return;
+    return true;
 
   // Read in chunks
-  readTwoChunks(csvFile, null);
+  readTwoChunks(chunks[0]);
+  return false;
 }
 
 //-----------------------------------------------------------------------------
@@ -61,14 +91,15 @@ function removeAllChildNodes(parent) {
     }
 }
 
-// Read files in chunks of 16 Mb
-const CHUNK_SIZE = 2**24;
-
+//-----------------------------------------------------------------------------
+// ps2Changed
+// A new file is selected to read in.
+//-----------------------------------------------------------------------------
 function ps2Changed(event) {
   const fileList = event.target.files;
   if (fileList.length > 0) {
     const file = fileList[0];
-    if (file.size < CHUNK_SIZE) {
+    if (file.size < SMALL_FILE_SIZE) {
       readFileFull(file, '');
     } else {
       // window.alert('csv file too large to fit in memory. ' +
@@ -78,6 +109,10 @@ function ps2Changed(event) {
   }
 }
 
+//-----------------------------------------------------------------------------
+// incFile
+// Move to the next/prev file
+//-----------------------------------------------------------------------------
 function incFile(inc) {
   if (inc == 1) {
     if (filesWidget.selectedIndex < filesWidget.options.length-1) {
@@ -109,105 +144,106 @@ function incFile(inc) {
   return true;
 }
 
-let controlKey = false;
-function onload() {
-  // let msg = document.getDocumentById('#message');
+//-----------------------------------------------------------------------------
+// onKeyPress
+//-----------------------------------------------------------------------------
+function onKeyPress(event) {
+  // console.log(event.key);
 
-  document.addEventListener("keydown", (event) => {
-    // console.log(event.key);
-
-    if (event.key == 'ArrowRight') {
-      let i = findString(findStringWidget.value);
-      if (i > -1) {
-        slider.value = i;
-        sliderChanged(slider);
-        return;
-      }
-    }    
-  });
-  document.addEventListener("keyup", (event) => {
-  });
-  document.addEventListener("keypress", (event) => {
-    // console.log(event.key);
-
-    let inc = 'f'
-    let dec = 'd'
-    let inc10 = 'F'
-    let dec10 = 'D'
-    let incCheck = 'g'
-    let decCheck = 's'
-    
-    if (event.key == incCheck) {
-      if (slider.value == slider.max) {
-        if (incFile(1)) {
-          slider.value = 0;
-          sliderChanged(slider);
-        }
-      } else {
-        slider.value = getNextCheckpoint();
+  let inc = 'f'
+  let dec = 'd'
+  let inc10 = 'F'
+  let dec10 = 'D'
+  let incCheck = 'g'
+  let decCheck = 's'
+  
+  if (event.key == incCheck) {
+    if (slider.value == slider.max) {
+      if (incFile(1)) {
+        slider.value = 0;
         sliderChanged(slider);
       }
-    } else if (event.key == decCheck) {
-      if (slider.value == 0) {
-        incFile(-1);
-      } else {
-        slider.value = getPrevCheckpoint();
-        sliderChanged(slider);
-      }
-    } else if (event.key == 'j') {
-      incFile(1);
-    } else if (event.key == 'k') {
-      incFile(0);
-    } else if (event.key == 'a') {
-      slider.value = 0;
-      sliderChanged(slider);
-    } else if (event.key == 'e') {
-      slider.value = slider.max;
-      sliderChanged(slider);
-    } else if (event.key == dec) {
-      slider.value = +slider.value - 1;
-      sliderChanged(slider);
-    } else if (event.key == inc) {
-      slider.value = +slider.value + 1;
-      sliderChanged(slider);
-    } else if (event.key == dec10) {
-      slider.value = +slider.value - 10;
-      sliderChanged(slider);
-    } else if (event.key == inc10) {
-      slider.value = +slider.value + 10;
+    } else {
+      slider.value = getNextCheckpoint();
       sliderChanged(slider);
     }
-  });
-
-  document.getElementById('ps2-selector').addEventListener('change', ps2Changed);
-
-  // // Load a file automatically for testing
-  // $.ajax({
-  //   async:true,
-  //   // url: 'deident.csv',
-  //   url: 'test.csv',
-  //   dataType: 'text',
-  //   success: function(data) 
-  //   {
-  //     // dfall = $.csv.toObjects(data);
-  //     // loadData(data);
-  //     parseCSV(data);
-  //   }
-  // });
+  } else if (event.key == decCheck) {
+    if (slider.value == 0) {
+      incFile(-1);
+    } else {
+      slider.value = getPrevCheckpoint();
+      sliderChanged(slider);
+    }
+  } else if (event.key == 'j') {
+    incFile(1);
+  } else if (event.key == 'k') {
+    incFile(0);
+  } else if (event.key == 'a') {
+    slider.value = 0;
+    sliderChanged(slider);
+  } else if (event.key == 'e') {
+    slider.value = slider.max;
+    sliderChanged(slider);
+  } else if (event.key == dec) {
+    slider.value = +slider.value - 1;
+    sliderChanged(slider);
+  } else if (event.key == inc) {
+    slider.value = +slider.value + 1;
+    sliderChanged(slider);
+  } else if (event.key == dec10) {
+    slider.value = +slider.value - 10;
+    sliderChanged(slider);
+  } else if (event.key == inc10) {
+    slider.value = +slider.value + 10;
+    sliderChanged(slider);
+  }
 }
 
-// All data
-let dfall = null;
-// Data for the selected subject
-let dfSubject = null;
-// Data for the selected subject/assignment
-let dfAssign = null;
-// Data for the selected subject/assignment/file
-let df = null;
-let editNum2rowNum = null;
-let file = null;
+//-----------------------------------------------------------------------------
+// onKeyDown
+//-----------------------------------------------------------------------------
+function onKeyDown(event) {
+  // console.log(event.key);
 
+  if (event.key == 'ArrowRight') {
+    let i = findString(findStringWidget.value);
+    if (i > -1) {
+      slider.value = i;
+      sliderChanged(slider);
+      return;
+    }
+  }    
+}
+
+//-----------------------------------------------------------------------------
+// onload
+//-----------------------------------------------------------------------------
+function onload() {
+  document.addEventListener("keydown", onKeyDown);
+  document.addEventListener("keypress", onKeyPress);
+
+  document.getElementById('ps2-selector').
+    addEventListener('change', ps2Changed);
+
+  // Load a file automatically for testing
+  $.ajax({
+    async:true,
+    // url: 'deident.csv',
+    url: 'test.csv',
+    dataType: 'text',
+    success: function(data) 
+    {
+      // dfall = $.csv.toObjects(data);
+      // loadData(data);
+      parseCSV(data);
+    }
+  });
+}
+
+//-----------------------------------------------------------------------------
+// prepdfall
 // Converts timestamp to an integer and sets EventIdx.
+//-----------------------------------------------------------------------------
 function prepdfall() {
   let i = 0;
   dfall.forEach(row => {
@@ -217,85 +253,107 @@ function prepdfall() {
   });
 }
 
-function loadData() {//data) {
-  loadingWidget.style.visibility = 'visible';
+// function loadData() {
+// }
 
-  updateSubjectWidget();
-  loadingWidget.style.visibility = 'hidden';
-}
-
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 function updateSubjectWidget() {
-  let subjects = new Set();
-  dfall.forEach(row => {
-    subjects.add(row['SubjectID']);
-  });
+  // let subjects = new Set();
+  // dfall.forEach(row => {
+  //   subjects.add(row['SubjectID']);
+  // });
 
-  console.log(subjects);
+  // console.log(subjects);
 
   removeAllChildNodes(subjectsWidget);
-  subjects = Array.from(subjects).sort()
-  subjects.forEach(file => {
-    var element = document.createElement("option");
-    element.innerText = file;
+  // subjects = Array.from(subjects).sort()
+  // subjects.forEach(file => {
+  // console.log(subject2assignments2files.keys());
+  // subject2assignments2files.keys().forEach(s => {
+  for (const s of subject2assignments2files.keys()) {
+      var element = document.createElement("option");
+    element.innerText = s;
     subjectsWidget.append(element);
-  });
+  }//);
 
   subjectChanged();
 }
 
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 function subjectChanged() {
   subject = subjectsWidget.value;
-  dfSubject = dfall.filter(row => row.EventType == 'File.Edit' && row['SubjectID'] == subject);
+  // dfSubject = dfall.filter(row => row.EventType == 'File.Edit' && row['SubjectID'] == subject);
   updateAssignmentWidget();
 }
 
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 function updateAssignmentWidget() {
-  let assignments = new Set();
-  dfSubject.forEach(row => {
-    assignments.add(row['AssignmentID']);
-  });
+  // let assignments = new Set();
+  // dfSubject.forEach(row => {
+  //   assignments.add(row['AssignmentID']);
+  // });
 
   removeAllChildNodes(assignmentsWidget);
-  assignments = Array.from(assignments).sort()
-  assignments.forEach(file => {
+  // assignments = Array.from(assignments).sort()
+  // assignments.forEach(assignment => {
+  // subject2assignments2files.get(subject).keys().forEach(assignment => {
+  for (const assignment of subject2assignments2files.get(subject).keys()) {
     var element = document.createElement("option");
-    element.innerText = file;
+    element.innerText = assignment;
     assignmentsWidget.append(element);
-  });
+  }//);
 
   assignmentChanged();
 }
 
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 function assignmentChanged() {
   assignment = assignmentsWidget.value;
-  dfAssign = dfSubject.filter(row => row['AssignmentID'] == assignment);
+  // dfAssign = dfSubject.filter(row => row['AssignmentID'] == assignment);
   updateFileWidget();
 }
 
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 function updateFileWidget() {
-  let files = new Set();
-  dfAssign.forEach(row => {
-    files.add(row['CodeStateSection']);
-  });
+  // let files = new Set();
+  // dfAssign.forEach(row => {
+  //   files.add(row['CodeStateSection']);
+  // });
 
   removeAllChildNodes(filesWidget);
-  files = Array.from(files).sort()
-  files.forEach(file => {
+  // files = Array.from(files).sort()
+  // files.forEach(file => {
+  // subject2assignments2files.get(subject).get(assignment).keys().forEach(file => {
+  for (const file of
+       subject2assignments2files.get(subject).get(assignment).keys()) {
     var element = document.createElement("option");
     element.innerText = file;
     filesWidget.append(element);
-  });
+  }//);
 
   file = filesWidget.value;
   fileChanged();
 }
 
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 function fileChanged() {
   file = filesWidget.value;
-  updatedfall();
+  if (!updatedfall()) return;
   loadingWidget.style.visibility = 'visible';
 
-  df = dfAssign.filter(row => row['CodeStateSection'] == file);
+  // df = dfAssign.filter(row => row['CodeStateSection'] == file);
+  df = dfall.filter(row => {
+    return row.SubjectID == subject &&
+      row.AssignmentID == assignment &&
+      row.CodeStateSection == file &&
+      row.EventType == 'File.Edit';
+  });
   slider.max = df.length-1;
   slider.value = slider.max;
   // slider.value = 0;
@@ -304,6 +362,25 @@ function fileChanged() {
   loadingWidget.style.visibility = 'hidden';
 }
 
+//-----------------------------------------------------------------------------
+// sliderChanged
+//-----------------------------------------------------------------------------
+function sliderChanged(slider) {
+  editNumWidget.innerHTML = slider.value;//this.value;
+  reconstruct(df);
+}
+
+//-----------------------------------------------------------------------------
+// sliderChanged
+// Update the current slider value (each time you drag the slider handle)
+//-----------------------------------------------------------------------------
+slider.oninput = function() {
+  sliderChanged(this);
+}
+
+//-----------------------------------------------------------------------------
+// getNextCheckpoint
+//-----------------------------------------------------------------------------
 function getNextCheckpoint() {
   if (slider.value == slider.max) return slider.max;
   for (let i = +slider.value+1; i <= +slider.max; ++i) {
@@ -315,6 +392,9 @@ function getNextCheckpoint() {
   return slider.max;
 }
 
+//-----------------------------------------------------------------------------
+// getPrevCheckpoint
+//-----------------------------------------------------------------------------
 function getPrevCheckpoint() {
   if (slider.value == 0) return 0;
   for (let i = slider.value-1; i > 0; --i) {
@@ -326,6 +406,11 @@ function getPrevCheckpoint() {
   return 0;
 }
 
+//-----------------------------------------------------------------------------
+// findString
+// Look for the first time that a string appears in the reconstruction.
+// Returns the index of the change.
+//-----------------------------------------------------------------------------
 function findString(toFind) {
   if (df.length == 0) {
     return -1;
@@ -350,11 +435,14 @@ function findString(toFind) {
   return -1;
 }
 
+//-----------------------------------------------------------------------------
+// reconstruct
+// Reconstruct the file.
+//-----------------------------------------------------------------------------
 function reconstruct(df) {
   table.innerHTML = '';
   textarea.value = '';
 
-  // console.log(df);
   if (df.length == 0) {
     return;
   }
@@ -374,16 +462,21 @@ function reconstruct(df) {
     }
   }
 
-  textarea.value = s;
+  let split = s.split('\n');
+  let t = '';
+  for (let i=0; i < split.length; ++i) {
+    t = t + (i+1).toString().padEnd(3) + ' ' + split[i] + '\n';
+  }
+  textarea.value = t;
   
   try {
     filbert.parse(s);
     errorWidget.style.visibility = 'hidden';
   } catch(e) {
+    console.log(e.loc);
+    errorWidget.innerHTML = `Error on line ${e.loc.line}`;
     errorWidget.style.visibility = 'visible';
   }
-
-
 
   eventNum = df[slider.value].EventIdx;
   if (eventNumWidget != null) {
@@ -424,6 +517,10 @@ function reconstruct(df) {
   table.innerHTML = s;
 }
 
+//-----------------------------------------------------------------------------
+// parseCSV
+// Given a string (data), parse the CSV. Assumes the header is in data.
+//-----------------------------------------------------------------------------
 function parseCSV(data) {
   dfall = $.csv.toObjects(data);
 
@@ -440,10 +537,22 @@ function parseCSV(data) {
     return a.ClientTimestamp - b.ClientTimestamp;
   });
 
+  dfall.forEach(row => {
+    add(row.SubjectID, row.AssignmentID, row.CodeStateSection);
+  });
+
   prepdfall();
-  loadData();//header+data);
+  // loadData();//header+data);
+
+  loadingWidget.style.visibility = 'visible';
+  updateSubjectWidget();
+  loadingWidget.style.visibility = 'hidden';
 }
 
+//-----------------------------------------------------------------------------
+// readFileFull
+// Read a CSV file into memory.
+//-----------------------------------------------------------------------------
 function readFileFull(file, header) {
   loadingWidget.style.visibility = 'visible';
   const reader = new FileReader();
@@ -454,23 +563,24 @@ function readFileFull(file, header) {
   reader.readAsText(file);
 }
 
+//-----------------------------------------------------------------------------
+// readFilePartial
+// Read a file into memory in chunks.
+//-----------------------------------------------------------------------------
 function readFilePartial(file, header) {
   // loadingWidget.style.visibility = 'visible';
-  // const reader = new FileReader();
-  // reader.addEventListener('load', (event) => {
-  //   const data = event.target.result;
-  //   // parseCSV(header+data);
-  //   console.log(data);
-  // });
-  // console.log(file.size);
-  // let blob = file.slice(0, 100);
-  // reader.readAsText(blob);
   csvFile = file;
   readAllChunks(file, (x) => {console.log('callback');});
 }
 
 let header = null;
 let chunkOffsets = [0];
+//-----------------------------------------------------------------------------
+// readAllChunks
+// Reads the csv file in its entirety, chunk-by-chunk. Finds all subjects,
+// assignments, and files and also populates the chunkOffsets array for later
+// reading of chunks from file.
+//-----------------------------------------------------------------------------
 function readAllChunks(file, callback) {
   header = null;
   Papa.parse(file, {
@@ -480,9 +590,6 @@ function readAllChunks(file, callback) {
       if (header == null) {
         header = results.meta.fields;
       }
-      // console.log(results);
-      // console.log('chunk', results.data[0]);
-      // console.log('chunk', results.meta.cursor);
       console.log('chunk', chunkOffsets.length-1);
 
       let rows = results.data;
@@ -493,33 +600,38 @@ function readAllChunks(file, callback) {
           rows[0].AssignmentID +
           rows[0].CodeStateSection;
       if (curKey in key2chunks) {
-        // key2chunks[curKey].push(cursor);
         key2chunks[curKey].push(chunkOffsets.length-1);
       } else {
-          key2chunks[curKey] = [chunkOffsets.length-1];
+        key2chunks[curKey] = [chunkOffsets.length-1];
       }
+      add(rows[0].SubjectID, rows[0].AssignmentID, rows[0].CodeStateSection);
       
       rows.forEach(row => {
         let key = row.SubjectID+row.AssignmentID+row.CodeStateSection;
         if (key != curKey) {
-          // key2chunks[key] = [cursor];
           key2chunks[key] = [chunkOffsets.length-1];
           curKey = key;
+          add(row.SubjectID, row.AssignmentID, row.CodeStateSection);
         }
       });
       chunkOffsets.push(cursor);
     },
     complete: function() {
       console.log('completed reading chunks');
-      // chunkOffsets = chunkOffsets.slice(0, -1);
-      // console.log(chunkOffsets);
-
-      readTwoChunks(0);
+      console.log(subject2assignments2files);
+      // readTwoChunks(0);
+      updateSubjectWidget();
     }
   });
 
 }
 
+//-----------------------------------------------------------------------------
+// readTwoChunks
+// We read two chunks into memory at a time since a file's events may span
+// across a chunk boundary. This assumes that no file's events span an entire
+// chunk.
+//-----------------------------------------------------------------------------
 function readTwoChunks(chunkIdx) {
   console.log('readTwoChunks', chunkIdx);
 
@@ -549,239 +661,22 @@ function readTwoChunks(chunkIdx) {
 
     prepdfall();
 
-    // console.log(dfall[0]);
     console.log(`Read chunk in ${(Date.now() - istart)/1000.0} seconds`);
 
-    // offset += CHUNK_SIZE;
-    // seek();
-
     chunksInMemory = new Set([chunkIdx, chunkIdx+1]);
-    updateSubjectWidget();
-
+    // updateSubjectWidget();
+    fileChanged();
   };
   fr.onerror = function() {
     console.log('Error reading chunks');
   };
-  seek();
 
-  function seek() {
-    // Should be >=?
-    if (offset+chunkSize > csvFile.size) {
-      console.error('Error: offset+chunk size is greater than file size');
-      return;
-    }
-    var slice = csvFile.slice(offset, offset + chunkSize);
-    fr.readAsText(slice);
+  // Should be >=?
+  if (offset+chunkSize > csvFile.size) {
+    console.error('Error: offset+chunk size is greater than file size');
+    return;
   }
+  var slice = csvFile.slice(offset, offset + chunkSize);
+  fr.readAsText(slice);
 }
-
-function readChunksBak(file, callback) {
-  // 1 KB at a time, because we expect that the column will probably small.
-  // var CHUNK_SIZE = 1024;
-  var offset = 0;
-  var fr = new FileReader();
-  var header = '';
-  var subjectIdx = -1;
-  var assignIdx = -1;
-  var fileIdx = -1;
-  
-  // // signals to only parse rows 3 and 4
-  // var rowRange = function(entry, state) {
-  //   var start = 3;
-  //   var end = 4;
-  //   if(state.rowNum >= start && state.rowNum <= end) {
-  //     return entry;
-  //   }
-  //   return false;
-  // }  
-  // $.csv.toArrays(testHook3, { onParseEntry: rowRange });
-
-  fr.onload = function() {
-    let data = event.target.result;
-    {
-      var istart = Date.now();
-
-      // let rows = $.csv.toArrays(data);
-
-      // signals to only parse rows 3 and 4
-      var rowRange = function(entry, state) {
-        console.log(entry);
-        console.log(state);
-        // var start = 3;
-        // var end = 4;
-        // if(state.rowNum >= start && state.rowNum <= end) {
-        //   return entry;
-        // }
-        // return false;
-        return true;
-      }  
-      let rows = $.csv.toArrays(data, { onParseEntry: rowRange });
-
-      
-      if (data.length == CHUNK_SIZE) {
-        // Don't read the last line if we're not at the last read since
-        // the last line will likely not be completely read.
-        rows = rows.slice(0,-1);
-      }
-      if (offset == 0) {
-        header = rows[0];
-        // Remove header
-        rows = rows.slice(1);
-
-        subjectIdx = header.findIndex((e) => e=='SubjectID');
-        assignIdx = header.findIndex((e) => e=='AssignmentID');
-        fileIdx = header.findIndex((e) => e=='CodeStateSection');
-      }
-
-      let istartRow = 0;
-      for (let i = 0; i < rows.length-1; ++i) {
-        let irow = rows[i];
-        let jrow = rows[i+1];
-
-        let isubject = irow[subjectIdx];
-        let iassign = irow[assignIdx];
-        let icodeFile = irow[fileIdx];
-
-        let jsubject = jrow[subjectIdx];
-        let jassign = jrow[assignIdx];
-        let jcodeFile = jrow[fileIdx];
-
-        if (isubject != jsubject ||
-            iassign != jassign ||
-            icodeFile != jcodeFile) {
-          console.log(istartRow, isubject, iassign, icodeFile);
-          iStartRow = i+1;
-        }
-      }
-
-
-      console.log(Date.now() - istart);
-
-      istart = Date.now();
-      let lines = $.csv.parsers.splitLines(data);
-      console.log(Date.now() - istart);
-    }
-    
-    // // let data = event.target.result;
-    // let lines = $.csv.parsers.splitLines(data);
-    // if (data.length == CHUNK_SIZE) {
-    //   // Don't read the last line if we're not at the last read since
-    //   // the last line will likely not be completely read.
-    //   lines = lines.slice(0,-1);
-    // }
-    // if (offset == 0) {
-    //   // Get header array
-    //   // header = data.slice(0, data.indexOf('\n')).split(',');
-    //   header = lines[0].split(',');
-    //   // Remove header
-    //   // data = data.slice(data.indexOf('\n')+1);
-    //   data = lines.slice(1);
-
-    //   subjectIdx = header.findIndex((e) => e=='SubjectID');
-    //   assignIdx = header.findIndex((e) => e=='AssignmentID');
-    //   fileIdx = header.findIndex((e) => e=='CodeStateSection');
-    // }
-
-    // var start = Date.now();
-
-    // // const rows = data.split('\n');
-    // const rows = lines;
-    // let k = 0;
-    // let reachedEnd = false;
-    
-    // while (!reachedEnd) {
-    //   const row = $.csv.toArray(rows[k]);
-    //   const subject = row[subjectIdx];
-    //   const assign = row[assignIdx];
-    //   const codeFile = row[fileIdx];
-
-    //   // Now do a binary search for the last entry for this
-    //   // subject, assignment, and file
-    //   const n = rows.length;
-    //   let imin = k;
-    //   let imax = rows.length-1;
-    //   let i = Math.floor((imin+imax)/2);
-    //   let found = false;
-    //   while (!found) {
-    //     let irow = $.csv.toArray(rows[i]);
-    //     let isubject = irow[subjectIdx];
-    //     let iassign = irow[assignIdx];
-    //     let icodeFile = irow[fileIdx];
-    //     // console.log(i, isubject, iassign, icodeFile);
-    //     if (isubject == subject && iassign == assign && icodeFile == codeFile) {
-    //       if (i == rows.length - 1) {
-    //         console.log('reached the end');
-    //         reachedEnd = true;
-    //         found = true;
-    //       } else {
-    //         let jrow = $.csv.toArray(rows[i+1]);
-    //         let jsubject = jrow[subjectIdx];
-    //         let jassign = jrow[assignIdx];
-    //         let jcodeFile = jrow[fileIdx];
-    //         found = (isubject != jsubject || iassign != jassign ||
-    //                  icodeFile != jcodeFile);
-    //         if (!found) {
-    //           imin = i+1;
-    //         }
-    //       }
-    //     } else {
-    //       imax = i-1;
-    //     }
-    //     if (!found) {
-    //       i = Math.floor((imin+imax)/2);
-    //     }
-    //   }
-    //   console.log(i, subject, assign, codeFile);
-    //   k = i+1;
-    // }
-
-    // console.log(rows.length);
-    
-    // var view = new Uint8Array(fr.result);
-    // for (var i = 0; i < view.length; ++i) {
-    //   if (view[i] === 10 || view[i] === 13) {
-    //     // \n = 10 and \r = 13
-    //     // column length = offset + position of \r or \n
-    //     callback(offset + i);
-    //     return;
-    //   }
-    // }
-
-    console.log('reading chunk');
-    // \r or \n not found, continue seeking.
-    offset += CHUNK_SIZE;
-    // seek();
-
-    // var end = Date.now();
-    // console.log(end-start);
-  };
-  fr.onerror = function() {
-    // Cannot read file... Do something, e.g. assume column size = 0.
-    callback(0);
-  };
-  seek();
-
-  function seek() {
-    if (offset >= file.size) {
-      // No \r or \n found. The column size is equal to the full
-      // file size
-      callback(file.size);
-      return;
-    }
-    var slice = file.slice(offset, offset + CHUNK_SIZE);
-    // fr.readAsArrayBuffer(slice);
-    fr.readAsText(slice);
-  }
-}
-
-function sliderChanged(slider) {
-  editNumWidget.innerHTML = slider.value;//this.value;
-  reconstruct(df);
-}
-
-// Update the current slider value (each time you drag the slider handle)
-slider.oninput = function() {
-  sliderChanged(this);
-}
-
 
