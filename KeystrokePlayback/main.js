@@ -19,6 +19,9 @@ editNumWidget.innerHTML = slider.value; // Display the default slider value
 
 var findStringWidget = document.getElementById('findString');
 
+var chart = null;
+var timeline = null;
+
 //-----------------------------------------------------------------------------
 // File-in-memory variables
 //-----------------------------------------------------------------------------
@@ -219,6 +222,16 @@ function onKeyDown(event) {
 // onload
 //-----------------------------------------------------------------------------
 function onload() {
+  // let textarea2 = document.getElementById('codemirror');
+  // var myCodeMirror = CodeMirror.fromTextArea(textarea, {
+  textarea = CodeMirror.fromTextArea(textarea, {
+    mode: "python",
+    lineNumbers: true,
+    lineWrapping: true,
+    readOnly: true,
+    styleSelectedText: true,
+  });
+
   document.addEventListener("keydown", onKeyDown);
   document.addEventListener("keypress", onKeyPress);
 
@@ -360,6 +373,14 @@ function fileChanged() {
   editNumWidget.innerHTML = slider.value;
   reconstruct(df);
   loadingWidget.style.visibility = 'hidden';
+
+  chart = new Chart();
+  chart.create(df);
+  chart.updatePlaybar(slider.value);
+
+  timeline = new Timeline();
+  timeline.create(df);
+  // timeline.updatePlaybar(slider.value);
 }
 
 //-----------------------------------------------------------------------------
@@ -368,6 +389,8 @@ function fileChanged() {
 function sliderChanged(slider) {
   editNumWidget.innerHTML = slider.value;//this.value;
   reconstruct(df);
+
+  chart.updatePlaybar(slider.value);
 }
 
 //-----------------------------------------------------------------------------
@@ -436,16 +459,50 @@ function findString(toFind) {
 }
 
 //-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+function getLineCh(i, lines) {
+  let j = 0;
+  let j_ = 0;
+  let line = 0;
+  while (j < i) {
+    j_ = j;
+    j += lines[line].length+1;
+    line++;
+  }
+  let ch = i - j_;
+  return {line: line-1, ch: ch};
+}
+
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+let lastMark = null;
+function markText(start, end) {
+  if (lastMark) lastMark.clear();
+
+  let s = textarea.getValue();
+  let lines = s.split('\n');
+  let a = getLineCh(start, lines);
+  let b = getLineCh(end, lines);
+  lastMarkStart = a;
+  lastMarkEnd = b;
+  
+  lastMark = textarea.markText(a, b, {className: "styled-background"});
+}
+
+//-----------------------------------------------------------------------------
 // reconstruct
 // Reconstruct the file.
 //-----------------------------------------------------------------------------
 function reconstruct(df) {
   table.innerHTML = '';
-  textarea.value = '';
+  // textarea.value = '';
+  textarea.setValue('');
 
   if (df.length == 0) {
     return;
   }
+
+  let head = null;
 
   let s = '';
   // Reconstruct the file
@@ -462,19 +519,25 @@ function reconstruct(df) {
     }
   }
 
-  let split = s.split('\n');
-  let t = '';
-  for (let i=0; i < split.length; ++i) {
-    t = t + (i+1).toString().padEnd(3) + ' ' + split[i] + '\n';
-  }
-  textarea.value = t;
+  // let split = s.split('\n');
+  // let t = '';
+  // for (let i=0; i < split.length; ++i) {
+  //   t = t + (i+1).toString().padEnd(3) + ' ' + split[i] + '\n';
+  // }
+  // textarea.value = t;
+  // textarea.value = s;
+  textarea.setValue(s);
   
   try {
     filbert.parse(s);
     errorWidget.style.visibility = 'hidden';
   } catch(e) {
-    console.log(e.loc);
-    errorWidget.innerHTML = `Error on line ${e.loc.line}`;
+    // console.log(e.loc);
+    if (e.loc) {
+      errorWidget.innerHTML = `Error on line ${e.loc.line}`;
+    } else {
+      errorWidget.innerHTML = e.toString();
+    }
     errorWidget.style.visibility = 'visible';
   }
 
