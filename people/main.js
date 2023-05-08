@@ -39,8 +39,9 @@ let grads = [
 
   // { image:'yearsley.png', size:165, name:'Caleb Yearsley', bio:"Caleb has been happily employed at Space Dynamics Laboratory for the last four years developing internal and external applications.  By the time of earning his Bachelor's Degree in Computer Science at Utah State University in 2017 Caleb's passion for learning had only grown, and thus his journey to pursue his Master's Degree at USU had begun. He is looking forward to working with, and being advised by Dr. Edwards in exploring solutions for human pose estimations via neural networks. He takes high interests in database management systems, image processing, and as of recently machine learning. Caleb's hobbies include snowboarding, playing board games, drinking coffee/tea, and listening/composing music. Above all, however, he enjoys spending time with his beautiful wife and three amazing children." },
   { image:'urry-josh.jpg', size:165, name:'Josh Urry (Masters)', bio:"Josh completed his BS in Psychology from the University of Utah in December 2020. He then started working as a data analyst before pursuing an MS in Data Science. He is interested in the psychology behind Computer Science education, as well as broader aspects of Data Science, such as data visualization and machine learning. When Josh isn't working or completing schoolwork, he enjoys fly fishing, hiking, or doing anything outdoors." }, 
-  { image:'placeholder.jpg', size:165, name:'Jaxton Winder (Masters)', bio:'Jaxton built the brilliant Shell Tutor.' },
+  { image:'winder-jaxton.jpg', size:165, name:'Jaxton Winder (Masters)', bio:'Jaxton built the brilliant Shell Tutor and is doing research in grading. Jaxton is the USUSA College of Science Senator. And if you are interested in learning more about the music scene in Cache Valley and Salt Lake, look no further than Jaxton.' },
   { image:'staley-bridget.jpg', size:165, name:'Bridget Staley (Masters)', bio:'Bridget Staley received a B.S. in computer science from USU in 2018. She has worked as a software engineer since then. She is working full-time while pursuing her masters in computer science. Her passion is in encouraging more women in technology. She is researching how to increase the diversity in CS through curriculum. During her free time, you will often find her training her dogs, sewing, gardening, or playing/coaching soccer.' },
+  { image:'placeholder.jpg', size:165, name:'Caleb Syndergaard (Masters)', bio:'Caleb is working to crack the difficult problem of efficient deidentification of high temporal resolution keystroke logs.' },
   { image:'placeholder.jpg', size:165, name:'[Your name here]', bio:'Creative, intelligent, curious, and hard-working, [your name here] recently joined EdwardsLab and is progressing swimmingly towards a truly ground-breaking PhD thesis. [See the <a href="../contact/index.html">contact page</a> if you would like your name here.]' },
 ];
 
@@ -50,6 +51,10 @@ let undergrads = [
   { image:'scott-steven.jpg', size:140, name:'Steven Scott', bio:"Steven graduated from Utah State University with majors in Computer Science and Economics and minors in Mathematics and Anticipatory Intelligence. He works on data visualization research with EdwardsLab. He recently started a job as a software engineer at Northrop Grumman. Outside of school and work, Steven enjoys rock climbing, skiing, kayaking, running, and reading."},
 
   { image:'placeholder.jpg', size:140, name:'Kaden Hart (no relation to the other Kaden Hart)', bio:'Kaden just joined the group and is looking at physics simulations and their relation to the mathematics.' },
+
+  { image:'placeholder.jpg', size:140, name:'Elsa Schutfort', bio:'Elsa is looking at student effort, frustration, and progress while programming.' },
+
+  { image:'placeholder.jpg', size:140, name:'Matt Rau', bio:'Matt is investigating student behaviors while programming.' },
 ];
 
 
