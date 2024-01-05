@@ -12,6 +12,20 @@
     <link rel="icon" href="../assets/favicon.ico"/>
   </head>
 
+  <script>
+    let all = true;
+    function allChanged(){
+      const collection = document.getElementsByClassName("all");
+      for (let i = 0; i < collection.length; i++) {
+        if (all) {
+          collection[i].style.display = "none";
+        } else {
+          collection[i].style.display = "";
+        }
+        all = !all;
+      }
+    }
+  </script>
   <body>
     <!-------------------- Sidebar -------------------->
 
@@ -56,31 +70,38 @@
 
           <div style="margin: 10px 10px 10px 10px">
             <!--h2>Publications by year</h2-->
-            <p style="font-size: 12; color: #888888;">(* = student author)</p>
+          <!--div id="allButton">
+            <button onclick="allChanged()">All</button>
+            <button onclick="allChanged()">Selected</button>
+            <p onclick="changed()">hello world</p>
+
+          </div-->
+
+<p style="font-size: 12; color: #888888;">(* = student author)</p>
             <h3>2024</h3>
             <p>Joshua Urry* and John Edwards. A Framework that Explores the Cognitive Load of CS1 Assignments Using Pausing Behavior. <em>In ACM Technical Symposium on Computing Education (SIGCSE).</em> 2024.
             <p>Jaxton Winder*, Elise Francis*, Bridget Staley*, and John Edwards. Incremental Development and CS1 Student Outcomes And Behaviors. <em>In The 26th Australasian Computing Education Conference (ACE).</em> 2024.
             <h3>2023</h3>
-            <p class="x">Steven Scott*, Arto Hellas, Juho Leinonen, and John Edwards. Factors Affecting Compilable State at Each Keystroke in CS1. <em>In ACM International Conference on Software Engineering (ICSE), Software Engineering Education and Training (SEET) track.</em> 2023.
+            <p>Steven Scott*, Arto Hellas, Juho Leinonen, and John Edwards. Factors Affecting Compilable State at Each Keystroke in CS1. <em>In ACM International Conference on Software Engineering (ICSE), Software Engineering Education and Training (SEET) track.</em> 2023.</p>
             <p>John Edwards, Kaden Hart*, Raj Shrestha*. Review of CSEDM Data and Introduction of Two Public CS1 Keystroke Datasets. <em>Journal of Educational Data Mining.</em> 2023.
             <p>Kaden Hart*, Christopher Warren, and John Edwards. Accurate Estimation of Time-on-Task While Programming. <em>In ACM Technical Symposium on Computing Education (SIGCSE).</em> 2023.
             <p>Kaden Hart*, Chad Mano, and John Edwards. Plagiarism Deterrence in CS1 Through Keystroke Data. <em>In ACM Technical Symposium on Computing Education (SIGCSE).</em> 2023.
             <p>Arto Hellas, Juho Leinonen, and John Edwards. Code Mimicking: The Impact of Program Output on Novice Programmers' Learning Gains. <em>ACM conference on Innovation and Technology in Computer Science Education (ITiCSE)</em>. 2023.</p>
             <p>Muhammad Fawad Akbar Khan, John Edwards, Paul Bodily, and Hamid Karimi. Mining Student Behavior Patterns for Enhanced Performance Prediction in Introductory Programming: Keystroke Analysis and Ensemble Strategies. <em>In IEEE BigData.</em> 2023.
-            <p>Aashish Ghimire*, Raj Shrestha*, and John Edwards. Too Legal; Didn’t Read (TLDR): Summarization of Court Opinions. <em>In IEEE Intermountain Engineering, Technology, and Computing Conference (i-ETC).</em> 2023.
-            <p>Aashish Ghimire*, Rita Ghimire, and John Edwards. Metadata in Tweets: Broadcasting a Lot More Than What You Tweet. <em>In IEEE Intermountain Engineering, Technology, and Computing Conference (i-ETC).</em> 2023.
-            <p>Stephanie Gonzales*, Hillary Swanson, and John Edwards. Activity During High-Repetition Practice of Syntax. <em>In IEEE Intermountain Engineering, Technology, and Computing Conference (i-ETC).</em> 2023.
-            <p>Jaxton Winder*, Erik Falor, and John Edwards. Early Submission of Project Analysis Milestones Correlates Positively With Student Project Performance; Incentives for This Early Project Analysis Positively Changes Student Behaviors. <em>In IEEE Intermountain Engineering, Technology, and Computing Conference (i-ETC).</em> 2023.
+            <p class="all">Aashish Ghimire*, Raj Shrestha*, and John Edwards. Too Legal; Didn’t Read (TLDR): Summarization of Court Opinions. <em>In IEEE Intermountain Engineering, Technology, and Computing Conference (i-ETC).</em> 2023.
+            <p class="all">Aashish Ghimire*, Rita Ghimire, and John Edwards. Metadata in Tweets: Broadcasting a Lot More Than What You Tweet. <em>In IEEE Intermountain Engineering, Technology, and Computing Conference (i-ETC).</em> 2023.
+            <p class="all">Stephanie Gonzales*, Hillary Swanson, and John Edwards. Activity During High-Repetition Practice of Syntax. <em>In IEEE Intermountain Engineering, Technology, and Computing Conference (i-ETC).</em> 2023.
+            <p class="all">Jaxton Winder*, Erik Falor, and John Edwards. Early Submission of Project Analysis Milestones Correlates Positively With Student Project Performance; Incentives for This Early Project Analysis Positively Changes Student Behaviors. <em>In IEEE Intermountain Engineering, Technology, and Computing Conference (i-ETC).</em> 2023.
               <h3>2022</h3>
             <p>Boyd F Edwards, Cade Pankey, and John M Edwards. Inertial motion on the earth’s spheroidal surface. <em>Chaos: An Interdisciplinary Journal of Nonlinear Science.</em> 2022.</p>
             <p>Raj Shrestha*, Juho Leinonen, Albina Zavgorodniaia, Arto Hellas, and John Edwards. Pausing While Programming: Insights From Keystroke Analysis. <em>In ACM International Conference on Software Engineering (ICSE), Software Engineering Education and Training (SEET) track.</em> 2022.
             <p>John Edwards, Kaden Hart*, and Chris Warren. A practical model of student engagement while programming. <em>ACM Technical Symposium on Computing Science Education (SIGCSE).</em> 2022.</p>
             <p>Raj Shrestha*, Juho Leinonen, Arto Hellas, Petri Ihantola, and John Edwards. <i>CodeProcess</i> Charts: Visualizing the Process of Writing Code. <em>Twenty-Fourth Australasian Computing Education Conference (ACE)</em>. 2022.</p>
             <p>Eric Bagley*, Jessica Shumway, and John Edwards. Second-grade Students’ Use of Visual Programming to Learn Multiplication: Leveraging the Concept of Iteration. <em>Twenty-Fourth Australasian Computing Education Conference (ACE).</em> 2022.</p>
-            <p>Gordon Fjeldsted* and John Edwards. Quantifying Student Struggles Using Heatmaps and Keystroke Data. <em>IEEE Intermountain Engineering, Technology, and Computing Conference (i-ETC)</em>. Orem, UT. May 2022.</p>
-            <p>Aashish Ghimire* and John Edwards. Introspection with Data: Using Personality Traits for Academic Major Selection. <em>IEEE Intermountain Engineering, Technology, and Computing Conference (i-ETC)</em>. Orem, UT. May 2022.</p>
-<p>Marina Johnson*, Hillary Swanson, and John Edwards. Syntax Exercises and Their Effect on Computational Thinking. <em>IEEE Intermountain Engineering, Technology, and Computing Conference (i-ETC)</em>. Orem, UT. May 2022.</p>
-<p>Delaney Moore, John Edwards, Hamid Karimi, Rajiv Khadka, and Paul Bodily. Temporal Abstract Syntax Trees for Understanding Student Coding Thought Process. <em>IEEE Intermountain Engineering, Technology, and Computing Conference (i-ETC)</em>. Orem, UT. May 2022.</p>
+            <p class="all">Gordon Fjeldsted* and John Edwards. Quantifying Student Struggles Using Heatmaps and Keystroke Data. <em>IEEE Intermountain Engineering, Technology, and Computing Conference (i-ETC)</em>. Orem, UT. May 2022.</p>
+            <p class="all">Aashish Ghimire* and John Edwards. Introspection with Data: Using Personality Traits for Academic Major Selection. <em>IEEE Intermountain Engineering, Technology, and Computing Conference (i-ETC)</em>. Orem, UT. May 2022.</p>
+<p class="all">Marina Johnson*, Hillary Swanson, and John Edwards. Syntax Exercises and Their Effect on Computational Thinking. <em>IEEE Intermountain Engineering, Technology, and Computing Conference (i-ETC)</em>. Orem, UT. May 2022.</p>
+<p class="all">Delaney Moore, John Edwards, Hamid Karimi, Rajiv Khadka, and Paul Bodily. Temporal Abstract Syntax Trees for Understanding Student Coding Thought Process. <em>IEEE Intermountain Engineering, Technology, and Computing Conference (i-ETC)</em>. Orem, UT. May 2022.</p>
 
             <h3>2021</h3>
             <p>Shelsey Sullivan*, Hillary Swanson, and John Edwards. Student attitudes toward syntax exercises in CS1. <em>ACM Technical Symposium on Computing Science Education (SIGCSE).</em> Toronto, Canada. 2021.</p>
@@ -95,7 +116,7 @@
             <p>John Edwards, Joseph Ditton*, Dragan Trninic, Shelsey Sullivan*, Hillary Swanson, and Chad Mano. Syntax exercises in CS1. <em>ACM International Computing Education Research (ICER) Conference.</em> Dunedin, New Zealand. August 2020.</p>
             <p>John Edwards, Arto Leinonen, Albina Zavgorodniaia, Chetan Birthare*, and Arto Hellas. Programming versus natural language: on the effect of context on typing in CS1. <em>ACM International Computing Education Research (ICER) Conference.</em> Dunedin, New Zealand. August 2020.</p>
             <p>John Edwards, Joseph Ditton*, Bishal Sainju*, and Joshua Dawson*. Different Assignments as Different Contexts: Predictors Across Assignments and Outcome Measures in CS1. <em>IEEE Intermountain Engineering, Technology, and Computing Conference (i-ETC)</em>. Orem, UT. September 2020.</p>
-            <p>Steven Scott*, Jaxon Willard*, and John Edwards. High Dimensional Event Exploration over Multiple Simulations. <em>IEEE Intermountain Engineering, Technology, and Computing Conference (i-ETC)</em>. Orem, UT. September 2020.</p>
+            <p class="all">Steven Scott*, Jaxon Willard*, and John Edwards. High Dimensional Event Exploration over Multiple Simulations. <em>IEEE Intermountain Engineering, Technology, and Computing Conference (i-ETC)</em>. Orem, UT. September 2020.</p>
             <p>Christopher Hartwell, Tyler Orr, and John Edwards. The Effect of Online Application Efficiency on Applicant Attrition. <em>International Journal of Selection and Assessment</em>. In press, 2020.</p>
             <p>John Edwards, Juho Leinonen*, and Arto Hellas. A Study of Keystroke Data in Two Contexts: Written Language and Programming Language Influence Predictability of Learning Outcomes. <em>ACM Technical Symposium on Computing Science Education (SIGCSE)</em>. Portland, OR. March 2020.</p>
             <p>Boyd Edwards, Bo Johnson*, and John Edwards. Periodic bouncing modes for two uniformly magnetized spheres I: Trajectories. <em>Chaos: An Interdisciplinary Journal of Nonlinear Science</em>. In press, 2020. <em>Featured article.</em></p>
