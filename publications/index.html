@@ -13,16 +13,36 @@
   </head>
 
   <script>
-    let all = true;
-    function allChanged(){
-      const collection = document.getElementsByClassName("all");
-      for (let i = 0; i < collection.length; i++) {
-        if (all) {
-          collection[i].style.display = "none";
-        } else {
-          collection[i].style.display = "";
-        }
-        all = !all;
+
+    function allClicked() {
+      // Show all
+      let elements = document.getElementsByClassName("hideable");
+      for (let i = 0; i < elements.length; i++) {
+        elements[i].style.display = "";
+      }
+    }
+    function csedClicked() {
+      // Hide all
+      let elements = document.getElementsByClassName("hideable");
+      for (let i = 0; i < elements.length; i++) {
+        elements[i].style.display = "none";
+      }
+      // Show csed
+      elements = document.getElementsByClassName("csed");
+      for (let i = 0; i < elements.length; i++) {
+        elements[i].style.display = "";
+      }
+    }
+    function physedClicked() {
+      // Hide all
+      let elements = document.getElementsByClassName("hideable");
+      for (let i = 0; i < elements.length; i++) {
+        elements[i].style.display = "none";
+      }
+      // Show physed
+      elements = document.getElementsByClassName("physed");
+      for (let i = 0; i < elements.length; i++) {
+        elements[i].style.display = "";
       }
     }
   </script>
@@ -76,72 +96,90 @@
             <p onclick="changed()">hello world</p>
 
           </div-->
+            <fieldset>
+              <legend>Venue</legend>
+
+              <div>
+                <input onclick="allClicked()" type="radio" id="all" name="venue" value="all" checked />
+                <label for="all">All</label>
+              </div>
+
+              <div>
+                <input onclick="csedClicked()" type="radio" id="csed" name="venue" value="csed" />
+                <label for="csed">Computing education</label>
+              </div>
+
+              <div>
+                <input onclick="physedClicked()" type="radio" id="physed" name="venue" value="physed" />
+                <label for="physed">Physics education</label>
+              </div>
+            </fieldset>
 
 <p style="font-size: 12; color: #888888;">(* = student author)</p>
-            <h3>2024</h3>
-            <p>Jared Arnell, Hillary Swanson, Boyd Edwards, and John Edwards. Operational Routes: A Construct for Characterizing Intermediate Learners’ Cognitive Navigational Strategies. <em>In International Conference of the Learning Sciences (ICLS).</em> 2024.
-            <p>Joshua Urry* and John Edwards. A Framework that Explores the Cognitive Load of CS1 Assignments Using Pausing Behavior. <em>In ACM Technical Symposium on Computing Education (SIGCSE).</em> 2024.
-            <p>Jaxton Winder*, Elise Francis*, Bridget Staley*, and John Edwards. Incremental Development and CS1 Student Outcomes And Behaviors. <em>In The 26th Australasian Computing Education Conference (ACE).</em> 2024.
-            <h3>2023</h3>
-            <p>Steven Scott*, Arto Hellas, Juho Leinonen, and John Edwards. Factors Affecting Compilable State at Each Keystroke in CS1. <em>In ACM International Conference on Software Engineering (ICSE), Software Engineering Education and Training (SEET) track.</em> 2023.</p>
-            <p>John Edwards, Kaden Hart*, Raj Shrestha*. Review of CSEDM Data and Introduction of Two Public CS1 Keystroke Datasets. <em>Journal of Educational Data Mining.</em> 2023.
-            <p>Kaden Hart*, Christopher Warren, and John Edwards. Accurate Estimation of Time-on-Task While Programming. <em>In ACM Technical Symposium on Computing Education (SIGCSE).</em> 2023.
-            <p>Kaden Hart*, Chad Mano, and John Edwards. Plagiarism Deterrence in CS1 Through Keystroke Data. <em>In ACM Technical Symposium on Computing Education (SIGCSE).</em> 2023.
-            <p>Arto Hellas, Juho Leinonen, and John Edwards. Code Mimicking: The Impact of Program Output on Novice Programmers' Learning Gains. <em>ACM conference on Innovation and Technology in Computer Science Education (ITiCSE)</em>. 2023.</p>
-            <p>Muhammad Fawad Akbar Khan, John Edwards, Paul Bodily, and Hamid Karimi. Mining Student Behavior Patterns for Enhanced Performance Prediction in Introductory Programming: Keystroke Analysis and Ensemble Strategies. <em>In IEEE BigData.</em> 2023.
-            <p class="all">Aashish Ghimire*, Raj Shrestha*, and John Edwards. Too Legal; Didn’t Read (TLDR): Summarization of Court Opinions. <em>In IEEE Intermountain Engineering, Technology, and Computing Conference (i-ETC).</em> 2023.
-            <p class="all">Aashish Ghimire*, Rita Ghimire, and John Edwards. Metadata in Tweets: Broadcasting a Lot More Than What You Tweet. <em>In IEEE Intermountain Engineering, Technology, and Computing Conference (i-ETC).</em> 2023.
-            <p class="all">Stephanie Gonzales*, Hillary Swanson, and John Edwards. Activity During High-Repetition Practice of Syntax. <em>In IEEE Intermountain Engineering, Technology, and Computing Conference (i-ETC).</em> 2023.
-            <p class="all">Jaxton Winder*, Erik Falor, and John Edwards. Early Submission of Project Analysis Milestones Correlates Positively With Student Project Performance; Incentives for This Early Project Analysis Positively Changes Student Behaviors. <em>In IEEE Intermountain Engineering, Technology, and Computing Conference (i-ETC).</em> 2023.
-              <h3>2022</h3>
-            <p>Boyd F Edwards, Cade Pankey, and John M Edwards. Inertial motion on the earth’s spheroidal surface. <em>Chaos: An Interdisciplinary Journal of Nonlinear Science.</em> 2022.</p>
-            <p>Raj Shrestha*, Juho Leinonen, Albina Zavgorodniaia, Arto Hellas, and John Edwards. Pausing While Programming: Insights From Keystroke Analysis. <em>In ACM International Conference on Software Engineering (ICSE), Software Engineering Education and Training (SEET) track.</em> 2022.
-            <p>John Edwards, Kaden Hart*, and Chris Warren. A practical model of student engagement while programming. <em>ACM Technical Symposium on Computing Science Education (SIGCSE).</em> 2022.</p>
-            <p>Raj Shrestha*, Juho Leinonen, Arto Hellas, Petri Ihantola, and John Edwards. <i>CodeProcess</i> Charts: Visualizing the Process of Writing Code. <em>Twenty-Fourth Australasian Computing Education Conference (ACE)</em>. 2022.</p>
-            <p>Eric Bagley*, Jessica Shumway, and John Edwards. Second-grade Students’ Use of Visual Programming to Learn Multiplication: Leveraging the Concept of Iteration. <em>Twenty-Fourth Australasian Computing Education Conference (ACE).</em> 2022.</p>
-            <p class="all">Gordon Fjeldsted* and John Edwards. Quantifying Student Struggles Using Heatmaps and Keystroke Data. <em>IEEE Intermountain Engineering, Technology, and Computing Conference (i-ETC)</em>. Orem, UT. May 2022.</p>
-            <p class="all">Aashish Ghimire* and John Edwards. Introspection with Data: Using Personality Traits for Academic Major Selection. <em>IEEE Intermountain Engineering, Technology, and Computing Conference (i-ETC)</em>. Orem, UT. May 2022.</p>
-<p class="all">Marina Johnson*, Hillary Swanson, and John Edwards. Syntax Exercises and Their Effect on Computational Thinking. <em>IEEE Intermountain Engineering, Technology, and Computing Conference (i-ETC)</em>. Orem, UT. May 2022.</p>
-<p class="all">Delaney Moore, John Edwards, Hamid Karimi, Rajiv Khadka, and Paul Bodily. Temporal Abstract Syntax Trees for Understanding Student Coding Thought Process. <em>IEEE Intermountain Engineering, Technology, and Computing Conference (i-ETC)</em>. Orem, UT. May 2022.</p>
+            <h3 class="hideable csed physed">2024</h3>
+            <p class="hideable physed">Jared Arnell, Hillary Swanson, Boyd Edwards, and John Edwards. Operational Routes: A Construct for Characterizing Intermediate Learners’ Cognitive Navigational Strategies. <em>In International Conference of the Learning Sciences (ICLS).</em> 2024.
+            <p class="hideable csed">Joshua Urry* and John Edwards. A Framework that Explores the Cognitive Load of CS1 Assignments Using Pausing Behavior. <em>In ACM Technical Symposium on Computing Education (SIGCSE).</em> 2024.
+            <p class="hideable csed">Jaxton Winder*, Elise Francis*, Bridget Staley*, and John Edwards. Incremental Development and CS1 Student Outcomes And Behaviors. <em>In The 26th Australasian Computing Education Conference (ACE).</em> 2024.
+            <h3 class="hideable csed">2023</h3>
+            <p class="hideable csed">Steven Scott*, Arto Hellas, Juho Leinonen, and John Edwards. Factors Affecting Compilable State at Each Keystroke in CS1. <em>In ACM International Conference on Software Engineering (ICSE), Software Engineering Education and Training (SEET) track.</em> 2023.</p>
+            <p class="hideable csed">John Edwards, Kaden Hart*, Raj Shrestha*. Review of CSEDM Data and Introduction of Two Public CS1 Keystroke Datasets. <em>Journal of Educational Data Mining.</em> 2023.
+            <p class="hideable csed">Kaden Hart*, Christopher Warren, and John Edwards. Accurate Estimation of Time-on-Task While Programming. <em>In ACM Technical Symposium on Computing Education (SIGCSE).</em> 2023.
+            <p class="hideable csed">Kaden Hart*, Chad Mano, and John Edwards. Plagiarism Deterrence in CS1 Through Keystroke Data. <em>In ACM Technical Symposium on Computing Education (SIGCSE).</em> 2023.
+            <p class="hideable csed">Arto Hellas, Juho Leinonen, and John Edwards. Code Mimicking: The Impact of Program Output on Novice Programmers' Learning Gains. <em>ACM conference on Innovation and Technology in Computer Science Education (ITiCSE)</em>. 2023.</p>
+            <p class="hideable">Muhammad Fawad Akbar Khan, John Edwards, Paul Bodily, and Hamid Karimi. Mining Student Behavior Patterns for Enhanced Performance Prediction in Introductory Programming: Keystroke Analysis and Ensemble Strategies. <em>In IEEE BigData.</em> 2023.
+            <p class="hideable">Aashish Ghimire*, Raj Shrestha*, and John Edwards. Too Legal; Didn’t Read (TLDR): Summarization of Court Opinions. <em>In IEEE Intermountain Engineering, Technology, and Computing Conference (i-ETC).</em> 2023.
+            <p class="hideable">Aashish Ghimire*, Rita Ghimire, and John Edwards. Metadata in Tweets: Broadcasting a Lot More Than What You Tweet. <em>In IEEE Intermountain Engineering, Technology, and Computing Conference (i-ETC).</em> 2023.
+            <p class="hideable">Stephanie Gonzales*, Hillary Swanson, and John Edwards. Activity During High-Repetition Practice of Syntax. <em>In IEEE Intermountain Engineering, Technology, and Computing Conference (i-ETC).</em> 2023.
+            <p class="hideable">Jaxton Winder*, Erik Falor, and John Edwards. Early Submission of Project Analysis Milestones Correlates Positively With Student Project Performance; Incentives for This Early Project Analysis Positively Changes Student Behaviors. <em>In IEEE Intermountain Engineering, Technology, and Computing Conference (i-ETC).</em> 2023.
+              <h3 class="hideable csed physed">2022</h3>
+            <p class="hideable physed">Boyd F Edwards, Cade Pankey, and John M Edwards. Inertial motion on the earth’s spheroidal surface. <em>Chaos: An Interdisciplinary Journal of Nonlinear Science.</em> 2022.</p>
+            <p class="hideable csed">Raj Shrestha*, Juho Leinonen, Albina Zavgorodniaia, Arto Hellas, and John Edwards. Pausing While Programming: Insights From Keystroke Analysis. <em>In ACM International Conference on Software Engineering (ICSE), Software Engineering Education and Training (SEET) track.</em> 2022.
+            <p class="hideable csed">John Edwards, Kaden Hart*, and Chris Warren. A practical model of student engagement while programming. <em>ACM Technical Symposium on Computing Science Education (SIGCSE).</em> 2022.</p>
+            <p class="hideable csed">Raj Shrestha*, Juho Leinonen, Arto Hellas, Petri Ihantola, and John Edwards. <i>CodeProcess</i> Charts: Visualizing the Process of Writing Code. <em>Twenty-Fourth Australasian Computing Education Conference (ACE)</em>. 2022.</p>
+            <p class="hideable csed">Eric Bagley*, Jessica Shumway, and John Edwards. Second-grade Students’ Use of Visual Programming to Learn Multiplication: Leveraging the Concept of Iteration. <em>Twenty-Fourth Australasian Computing Education Conference (ACE).</em> 2022.</p>
+            <p class="hideable">Gordon Fjeldsted* and John Edwards. Quantifying Student Struggles Using Heatmaps and Keystroke Data. <em>IEEE Intermountain Engineering, Technology, and Computing Conference (i-ETC)</em>. Orem, UT. May 2022.</p>
+            <p class="hideable">Aashish Ghimire* and John Edwards. Introspection with Data: Using Personality Traits for Academic Major Selection. <em>IEEE Intermountain Engineering, Technology, and Computing Conference (i-ETC)</em>. Orem, UT. May 2022.</p>
+<p class="hideable">Marina Johnson*, Hillary Swanson, and John Edwards. Syntax Exercises and Their Effect on Computational Thinking. <em>IEEE Intermountain Engineering, Technology, and Computing Conference (i-ETC)</em>. Orem, UT. May 2022.</p>
+<p class="hideable">Delaney Moore, John Edwards, Hamid Karimi, Rajiv Khadka, and Paul Bodily. Temporal Abstract Syntax Trees for Understanding Student Coding Thought Process. <em>IEEE Intermountain Engineering, Technology, and Computing Conference (i-ETC)</em>. Orem, UT. May 2022.</p>
 
-            <h3>2021</h3>
-            <p>Shelsey Sullivan*, Hillary Swanson, and John Edwards. Student attitudes toward syntax exercises in CS1. <em>ACM Technical Symposium on Computing Science Education (SIGCSE).</em> Toronto, Canada. 2021.</p>
-            <p>Joseph Ditton*, Hillary Swanson, and John Edwards. External Imagery in Computer Programming. <em>ACM Technical Symposium on Computing Science Education (SIGCSE).</em> Toronto, Canada. 2021.</p>
-            <p>Albina Zavgorodniaia, Raj Shrestha*, Juho Leinonen, Arto Hellas, and John Edwards. Morning or Evening? An Examination of Circadian Rhythms of CS1 Students. <em>ACM International Conference on Software Engineering (ICSE), Joint Track on Software Engineering Education and Training (JSEET).</em> Madrid, Spain. 2021.</p>
-            <p>Anna Ly, John Edwards, Michael Liut, and Andrew Petersen. Revisiting Syntax Exercises in CS1. <em>ACM Conference on Information Technology Education (SIGITE).</em> 2021.</p>
-            <p>Bishal Sainju*, Christopher Hartwell, and John Edwards. Job satisfaction and employee turnover determinants in Fortune 50 companies: Insights from employee reviews from Indeed.com. <em>Decision Support Systems</em>. 2021</p>
-            <p>Boyd F Edwards and John M Edwards. Geodetic Model for Teaching Motion on the Earths Spheroidal Surface. <em>European Journal of Physics</em>. 2021.</p>
-            <p>Boyd Edwards and John Edwards. Forces and Conservation Laws for Motion on our Ellipsoidal Earth. <em>American Journal of Physics.</em> 2021. <em>Editor's pick.</em></p>
-            <p>John Edwards, Cameron Krome, and Tracy Payne. Computation of Positively Graded Filiform Nilpotent Lie Algebras in Low Dimensions. <em>Symbolic Computation</em>. 2021.</p>
-            <h3>2020</h3>
-            <p>John Edwards, Joseph Ditton*, Dragan Trninic, Shelsey Sullivan*, Hillary Swanson, and Chad Mano. Syntax exercises in CS1. <em>ACM International Computing Education Research (ICER) Conference.</em> Dunedin, New Zealand. August 2020.</p>
-            <p>John Edwards, Arto Leinonen, Albina Zavgorodniaia, Chetan Birthare*, and Arto Hellas. Programming versus natural language: on the effect of context on typing in CS1. <em>ACM International Computing Education Research (ICER) Conference.</em> Dunedin, New Zealand. August 2020.</p>
-            <p>John Edwards, Joseph Ditton*, Bishal Sainju*, and Joshua Dawson*. Different Assignments as Different Contexts: Predictors Across Assignments and Outcome Measures in CS1. <em>IEEE Intermountain Engineering, Technology, and Computing Conference (i-ETC)</em>. Orem, UT. September 2020.</p>
-            <p class="all">Steven Scott*, Jaxon Willard*, and John Edwards. High Dimensional Event Exploration over Multiple Simulations. <em>IEEE Intermountain Engineering, Technology, and Computing Conference (i-ETC)</em>. Orem, UT. September 2020.</p>
-            <p>Christopher Hartwell, Tyler Orr, and John Edwards. The Effect of Online Application Efficiency on Applicant Attrition. <em>International Journal of Selection and Assessment</em>. In press, 2020.</p>
-            <p>John Edwards, Juho Leinonen*, and Arto Hellas. A Study of Keystroke Data in Two Contexts: Written Language and Programming Language Influence Predictability of Learning Outcomes. <em>ACM Technical Symposium on Computing Science Education (SIGCSE)</em>. Portland, OR. March 2020.</p>
-            <p>Boyd Edwards, Bo Johnson*, and John Edwards. Periodic bouncing modes for two uniformly magnetized spheres I: Trajectories. <em>Chaos: An Interdisciplinary Journal of Nonlinear Science</em>. In press, 2020. <em>Featured article.</em></p>
-            <p>Boyd Edwards, Bo Johnson*, and John Edwards. Periodic bouncing modes for two uniformly magnetized spheres II: Scaling. <em>Chaos: An Interdisciplinary Journal of Nonlinear Science</em>. In press, 2020.</p>
-            <h3>2018</h3>
-            <p>Lloyd Griffel*, Donna Delparte, and John Edwards. A machine learning approach using spectral signatures to detect potato plants infected with Potato Virus Y. <em>Computers and electronics in agriculture</em>. 153, 318-324. 2018.</p>
-            <p>DeWayne Derryberry, Ken Aho, John Edwards, and Teri Peterson. Model selection and regression t-statistics. <em>The American Statistician</em>. 72(4), 379-381. 2018.</p>
-            <p>John Edwards, Erika Fulton, Jonathan Holmes, Joseph Valentin*, David Beard, and Kevin Parker. Separation of syntax and problem solving in Introductory Computer Programming. <em>IEEE Frontiers in Education</em>. San Jose, CA. October 2018.</p>
-            <h3>2017</h3>
-            <p>Sidharth Kumar, Duong Hoang, Steve Petruzza, Valerio Pascucci, and John Edwards. Reducing network congestion and synchronization overhead during data aggregation when writing hierarchical data. <em>IEEE International Conference on High Performance Computing, Data, and Analytics</em>. Jaipur, India. December 2017. 23% acceptance rate.</p>
-            <p>Nathan Morrical* and John Edwards. Parallel quadtree construction on collections of objects. <em>Computers and Graphics</em>. 66:162168. 2017.</p>
-            <p>Boyd Edwards and John Edwards. Periodic nonlinear sliding modes for two uniformly magnetized spheres. <em>Chaos: An Interdisciplinary Journal of Nonlinear Science.</em> 27(5):053107, 2017.</p>
-            <h3>2016</h3>
-            <p>Boyd Edwards and John Edwards. Dynamical interactions between two uniformly magnetized spheres. <em>European Journal of Physics.</em> 38(1):015205, 2016.</p>
-            <p>Xin Tong, John Edwards, Chun-Ming Chen, Han-Wei Shen, Christopher Johnson, and Pak Chung Wong. View-dependent streamline deformation and exploration. <em>IEEE Transactions on Visualization and Computer Graphics.</em> 22(7):1788-1801, 2016.</p>
-            <h3>2015</h3>
-            <p>John Edwards, Eric Daniel, Valerio Pascucci, Chandrajit Bajaj. Approximating the Generalized Voronoi Diagram of Closely Spaced Objects. <em>Computer Graphics Forum.</em> 34(2):299-309, 2015.</p>
-            <h3>2014</h3>
-            <p>John Edwards, Eric Daniel, Justin Kinney, Terrence Sejnowski, Tom Bartol, Daniel Johnston, Kristen Harris, and Chandrajit Bajaj. <em>VolRoverN: Enhancing surface and volumetric reconstruction for realistic dynamical simulation of cellular and subcellular function.</em> Neuroinformatics. 12(2):277-289, 2014.</p>
-            <p>Sidharth Kumar, John Edwards, Peer-Timo Bremer, Aaron Knoll, Cameron Christensen, Venkatram Vishwanath, Philip Carns, John A. Schmidt, Valerio Pascucci. Efficient I/O and storage of adaptive resolution data. <em>High Performance Computing, Networking, Storage and Analysis (SC14).</em> New Orleans, LA. November 2014. 21% acceptance rate.</p>
-            <h3>2012</h3>
-            <p>John Edwards, Wenping Wang, and Chandrajit Bajaj. Surface segmentation for improved remeshing. <em>Proceedings of the 21st International Meshing Roundtable</em>, pages 403-418. San Jose, CA. October 2012.</p>
-            <h3>2011</h3>
-            <p>John Edwards and Chandrajit Bajaj. Topologically correct reconstruction of tortuous contour forests. <em>Computer-Aided Design.</em> 43(10):1296-1306, 2011.</p>
+            <h3 class="hideable csed physed">2021</h3>
+            <p class="hideable csed">Shelsey Sullivan*, Hillary Swanson, and John Edwards. Student attitudes toward syntax exercises in CS1. <em>ACM Technical Symposium on Computing Science Education (SIGCSE).</em> Toronto, Canada. 2021.</p>
+            <p class="hideable csed">Joseph Ditton*, Hillary Swanson, and John Edwards. External Imagery in Computer Programming. <em>ACM Technical Symposium on Computing Science Education (SIGCSE).</em> Toronto, Canada. 2021.</p>
+            <p class="hideable csed">Albina Zavgorodniaia, Raj Shrestha*, Juho Leinonen, Arto Hellas, and John Edwards. Morning or Evening? An Examination of Circadian Rhythms of CS1 Students. <em>ACM International Conference on Software Engineering (ICSE), Joint Track on Software Engineering Education and Training (JSEET).</em> Madrid, Spain. 2021.</p>
+            <p class="hideable csed">Anna Ly, John Edwards, Michael Liut, and Andrew Petersen. Revisiting Syntax Exercises in CS1. <em>ACM Conference on Information Technology Education (SIGITE).</em> 2021.</p>
+            <p class="hideable">Bishal Sainju*, Christopher Hartwell, and John Edwards. Job satisfaction and employee turnover determinants in Fortune 50 companies: Insights from employee reviews from Indeed.com. <em>Decision Support Systems</em>. 2021</p>
+            <p class="hideable physed">Boyd F Edwards and John M Edwards. Geodetic Model for Teaching Motion on the Earths Spheroidal Surface. <em>European Journal of Physics</em>. 2021.</p>
+            <p class="hideable physed">Boyd Edwards and John Edwards. Forces and Conservation Laws for Motion on our Ellipsoidal Earth. <em>American Journal of Physics.</em> 2021. <em>Editor's pick.</em></p>
+            <p class="hideable">John Edwards, Cameron Krome, and Tracy Payne. Computation of Positively Graded Filiform Nilpotent Lie Algebras in Low Dimensions. <em>Symbolic Computation</em>. 2021.</p>
+            <h3 class="hideable csed physed">2020</h3>
+            <p class="hideable csed">John Edwards, Joseph Ditton*, Dragan Trninic, Shelsey Sullivan*, Hillary Swanson, and Chad Mano. Syntax exercises in CS1. <em>ACM International Computing Education Research (ICER) Conference.</em> Dunedin, New Zealand. August 2020.</p>
+            <p class="hideable csed">John Edwards, Arto Leinonen, Albina Zavgorodniaia, Chetan Birthare*, and Arto Hellas. Programming versus natural language: on the effect of context on typing in CS1. <em>ACM International Computing Education Research (ICER) Conference.</em> Dunedin, New Zealand. August 2020.</p>
+            <p class="hideable">John Edwards, Joseph Ditton*, Bishal Sainju*, and Joshua Dawson*. Different Assignments as Different Contexts: Predictors Across Assignments and Outcome Measures in CS1. <em>IEEE Intermountain Engineering, Technology, and Computing Conference (i-ETC)</em>. Orem, UT. September 2020.</p>
+            <p class="hideable">Steven Scott*, Jaxon Willard*, and John Edwards. High Dimensional Event Exploration over Multiple Simulations. <em>IEEE Intermountain Engineering, Technology, and Computing Conference (i-ETC)</em>. Orem, UT. September 2020.</p>
+            <p class="hideable">Christopher Hartwell, Tyler Orr, and John Edwards. The Effect of Online Application Efficiency on Applicant Attrition. <em>International Journal of Selection and Assessment</em>. In press, 2020.</p>
+            <p class="hideable csed">John Edwards, Juho Leinonen*, and Arto Hellas. A Study of Keystroke Data in Two Contexts: Written Language and Programming Language Influence Predictability of Learning Outcomes. <em>ACM Technical Symposium on Computing Science Education (SIGCSE)</em>. Portland, OR. March 2020.</p>
+            <p class="hideable physed">Boyd Edwards, Bo Johnson*, and John Edwards. Periodic bouncing modes for two uniformly magnetized spheres I: Trajectories. <em>Chaos: An Interdisciplinary Journal of Nonlinear Science</em>. In press, 2020. <em>Featured article.</em></p>
+            <p class="hideable physed">Boyd Edwards, Bo Johnson*, and John Edwards. Periodic bouncing modes for two uniformly magnetized spheres II: Scaling. <em>Chaos: An Interdisciplinary Journal of Nonlinear Science</em>. In press, 2020.</p>
+            <h3 class="hideable">2018</h3>
+            <p class="hideable">Lloyd Griffel*, Donna Delparte, and John Edwards. A machine learning approach using spectral signatures to detect potato plants infected with Potato Virus Y. <em>Computers and electronics in agriculture</em>. 153, 318-324. 2018.</p>
+            <p class="hideable">DeWayne Derryberry, Ken Aho, John Edwards, and Teri Peterson. Model selection and regression t-statistics. <em>The American Statistician</em>. 72(4), 379-381. 2018.</p>
+            <p class="hideable">John Edwards, Erika Fulton, Jonathan Holmes, Joseph Valentin*, David Beard, and Kevin Parker. Separation of syntax and problem solving in Introductory Computer Programming. <em>IEEE Frontiers in Education</em>. San Jose, CA. October 2018.</p>
+            <h3 class="hideable physed">2017</h3>
+            <p class="hideable">Sidharth Kumar, Duong Hoang, Steve Petruzza, Valerio Pascucci, and John Edwards. Reducing network congestion and synchronization overhead during data aggregation when writing hierarchical data. <em>IEEE International Conference on High Performance Computing, Data, and Analytics</em>. Jaipur, India. December 2017. 23% acceptance rate.</p>
+            <p class="hideable">Nathan Morrical* and John Edwards. Parallel quadtree construction on collections of objects. <em>Computers and Graphics</em>. 66:162168. 2017.</p>
+            <p class="hideable physed">Boyd Edwards and John Edwards. Periodic nonlinear sliding modes for two uniformly magnetized spheres. <em>Chaos: An Interdisciplinary Journal of Nonlinear Science.</em> 27(5):053107, 2017.</p>
+            <h3 class="hideable physed">2016</h3>
+            <p class="hideable physed">Boyd Edwards and John Edwards. Dynamical interactions between two uniformly magnetized spheres. <em>European Journal of Physics.</em> 38(1):015205, 2016.</p>
+            <p class="hideable">Xin Tong, John Edwards, Chun-Ming Chen, Han-Wei Shen, Christopher Johnson, and Pak Chung Wong. View-dependent streamline deformation and exploration. <em>IEEE Transactions on Visualization and Computer Graphics.</em> 22(7):1788-1801, 2016.</p>
+            <h3 class="hideable">2015</h3>
+            <p class="hideable">John Edwards, Eric Daniel, Valerio Pascucci, Chandrajit Bajaj. Approximating the Generalized Voronoi Diagram of Closely Spaced Objects. <em>Computer Graphics Forum.</em> 34(2):299-309, 2015.</p>
+            <h3 class="hideable">2014</h3>
+            <p class="hideable">John Edwards, Eric Daniel, Justin Kinney, Terrence Sejnowski, Tom Bartol, Daniel Johnston, Kristen Harris, and Chandrajit Bajaj. <em>VolRoverN: Enhancing surface and volumetric reconstruction for realistic dynamical simulation of cellular and subcellular function.</em> Neuroinformatics. 12(2):277-289, 2014.</p>
+            <p class="hideable">Sidharth Kumar, John Edwards, Peer-Timo Bremer, Aaron Knoll, Cameron Christensen, Venkatram Vishwanath, Philip Carns, John A. Schmidt, Valerio Pascucci. Efficient I/O and storage of adaptive resolution data. <em>High Performance Computing, Networking, Storage and Analysis (SC14).</em> New Orleans, LA. November 2014. 21% acceptance rate.</p>
+            <h3 class="hideable">2012</h3>
+            <p class="hideable">John Edwards, Wenping Wang, and Chandrajit Bajaj. Surface segmentation for improved remeshing. <em>Proceedings of the 21st International Meshing Roundtable</em>, pages 403-418. San Jose, CA. October 2012.</p>
+            <h3 class="hideable">2011</h3>
+            <p class="hideable">John Edwards and Chandrajit Bajaj. Topologically correct reconstruction of tortuous contour forests. <em>Computer-Aided Design.</em> 43(10):1296-1306, 2011.</p>
 
           </div>
           <!-------------------- End your page content -------------------->
