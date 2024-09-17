@@ -71,8 +71,8 @@ let grads = [
 ];
 
 let undergrads = [
-  { image:'placeholder.jpg', size:140, name:'Kaden Hart (no relation to the other Kaden Hart)', bio:'Kaden is one of the principal software engineers of the DynamicsLab physics simulation suite.' },
-  { image:'placeholder.jpg', size:140, name:'Elsa Schutfort', bio:'Elsa is looking at student effort, frustration, and progress while programming.' },
+  { image:'hart-kaden-2.jpg', size:140, name:'Kaden Hart', bio:'Kaden is one of the principal software engineers of the DynamicsLab physics simulation suite.' },
+  // { image:'placeholder.jpg', size:140, name:'Elsa Schutfort', bio:'Elsa is looking at student effort, frustration, and progress while programming.' },
 ];
 
 
