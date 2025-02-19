@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title> EdwardsLab </title>
+    <link rel="icon" href="../favicon.ico?v=3" />
+    <meta name = "description" content = "EdwardsLab" />
+    <meta name = "Keywords" content = "Computer, Science, John, Edwards" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- remove the pro to get colors -->
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3pro.css">
+    <link rel="stylesheet" href="../style.css">
+    <link rel="icon" href="../assets/favicon.ico"/>
+  </head>
+
+  <body>
+    <!-------------------- Sidebar -------------------->
+
+    <!--
+        The sidebar in this example will always be displayed on screens wider
+        than 992px, and hidden on tablets or mobile phones (screens less than
+        993px wide). On tablets and mobile phones the sidebar is replaced with
+        a menu icon to open the sidebar. The sidebar will overlay of the page
+        content.
+      -->
+    <div class="w3-sidebar w3-bar-block w3-collapse w3-card w3-animate-left" style="width:200px; display:none; z-index:5" id="mySidebar">
+      <!--div class="w3-sidebar w3-bar-block w3-collapse w3-card" style="width:200px; display:none; z-index:5" id="mySidebar"-->
+      <button class="w3-bar-item w3-button w3-large w3-hide-large" onclick="w3_close()">Close &times;</button>
+      <div class="w3-bar-item sidebar-banner-text">EdwardsLab</div>
+      <a href="../index.html" class="w3-bar-item w3-button">Welcome</a>
+      <a href="../projects/index.html" class="w3-bar-item w3-button">Projects</a>
+      <a href="../publications/index.html" class="w3-bar-item w3-button">Publications</a>
+      <a href="../people/index.html" class="w3-bar-item w3-button">People</a>
+      <a href="../contact/index.html" class="w3-bar-item w3-button">Contact</a>
+    </div>
+
+    <!-------------------- Generic page content -------------------->
+
+    <div class="w3-main" style="margin-left:200px">
+      <div class="w3-teal">
+        <button class="w3-button w3-teal w3-xlarge w3-hide-large"
+                onclick="w3_open()">&#9776;</button>
+
+        <div class="w3-content">
+
+          <!-------------------- Your page content -------------------->
+          <h1 class="w3-comicfont banner-text" style="text-align:center">KeyLogger</h1>
+          <h3>Instructions for installing the KeyLogger VS Code extension</h3>
+          <ol>
+            <li>Download the extension from <a href="./KeyLogger.vsix">here</a>.</li>
+            <li>Open VS Code.</li>
+            <li>Open View > Extensions.</li>
+            <li>Press the "..." button in the top-right corner of the Extensions view.</li>
+            <li>Select "Install from VSIX...". (See screenshot below.)</li>
+            <li>Choose the KeyLogger.vsix file.</li>
+            <li>After installation, you should see a message in the bottom right corner stating, "Keylogger is activated!".</li>
+
+            To uninstall the extension, search for the extension "Keylogger" in extenstion part. Select that then press on uninstall and then restart your VS Code.
+          </ol>
+          <img class="" src="./KeyLogger.png" alt="KeyLogger installation" style="width:100%"/>
+          <!-------------------- End your page content -------------------->
+
+          <!-------------------- Footer -------------------->
+          <br>
+          <br>
+          <hr/>
+          <div class="w3-image center" style="text-align:center">
+          <img src="../assets/usu-cs-logo2.png" style="width:300px"/>
+          </div>
+          <br>
+
+        </div>
+      </div>
+    </div>
+
+
+
+    <!-------------------- Scripts -------------------->
+    <script src="./sidebar.js"></script>
+
+  </body>
+</html>
